@@ -1,0 +1,87 @@
+[
+    {
+        "id": "1",
+        "summary": {
+            "paid_installment": 10,
+            "total_installment": 12,
+            "next_payment_date": "10 Juni 2025",
+            "principal_paid": 5000000,
+            "total_loan": 6000000,
+            "remaining_loan": 1000000
+        },
+        "installments": [
+            {
+                "installment_no": 1,
+                "date": "25 May 2025, 09.15",
+                "amount": 500000,
+                "status": "paid"
+            },
+            {
+                "installment_no": 2,
+                "date": "25 May 2025, 09.15",
+                "amount": 500000,
+                "status": "paid"
+            },
+            {
+                "installment_no": 3,
+                "date": "25 May 2025, 09.15",
+                "amount": 500000,
+                "status": "paid"
+            },
+            {
+                "installment_no": 4,
+                "date": "25 May 2025, 09.15",
+                "amount": 500000,
+                "status": "paid"
+            },
+            {
+                "installment_no": 5,
+                "date": "25 May 2025, 09.15",
+                "amount": 500000,
+                "status": "paid"
+            },
+            {
+                "installment_no": 6,
+                "date": "25 May 2025, 09.15",
+                "amount": 500000,
+                "status": "paid"
+            },
+            {
+                "installment_no": 7,
+                "date": "25 Jun 2025 10.00",
+                "amount": 500000,
+                "status": "paid"
+            },
+            {
+                "installment_no": 8,
+                "date": "25 Jul 2025 12.30",
+                "amount": 500000,
+                "status": "paid"
+            },
+            {
+                "installment_no": 9,
+                "date": "25 Aug 2025 13.35",
+                "amount": 500000,
+                "status": "paid"
+            },
+            {
+                "installment_no": 10,
+                "date": "25 Sep 2025 09.30",
+                "amount": 500000,
+                "status": "paid"
+            },
+            {
+                "installment_no": 11,
+                "date": "25 Oct 202",
+                "amount": 500000,
+                "status": "unpaid"
+            },
+            {
+                "installment_no": 12,
+                "date": "25 Nov 2025",
+                "amount": 500000,
+                "status": "unpaid"
+            }
+        ]
+    }
+]

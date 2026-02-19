@@ -1,0 +1,25 @@
+{
+    "users": [
+        {
+            "id": 1,
+            "email": "user@test.com",
+            "password": "123456",
+            "name": "User Koperasi",
+            "member_no": "50739"
+        },
+        {
+            "id": 2,
+            "email": "admin@test.com",
+            "password": "admin123",
+            "name": "Admin",
+            "member_no": "00001"
+        },
+        {
+            "id": 3,
+            "email": "mail77",
+            "password": "ismail88",
+            "name": "mail",
+            "member_no": "00002"
+        }
+    ]
+}

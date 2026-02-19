@@ -1,0 +1,331 @@
+[
+    {
+        "id": "1",
+        "saldo": {
+            "wajib": 18088776,
+            "sukarela": 6512922,
+            "total": 24601698
+        },
+        "summary": {
+            "deposit": 13340900,
+            "withdraw": 2773200
+        },
+        "transactions": [
+            {
+                "type": "deposit",
+                "category": "sukarela",
+                "title": "kl",
+                "date": "2026-02-11T17:15:54.611448",
+                "amount": 62
+            },
+            {
+                "type": "withdraw",
+                "category": "",
+                "title": "b",
+                "date": "2026-02-11T16:52:23.555955",
+                "amount": 32
+            },
+            {
+                "type": "withdraw",
+                "category": "",
+                "title": "n",
+                "date": "2026-02-11T16:39:42.336741",
+                "amount": 32
+            },
+            {
+                "type": "withdraw",
+                "category": "",
+                "title": "m",
+                "date": "2026-02-11T16:22:55.096660",
+                "amount": 10000
+            },
+            {
+                "type": "deposit",
+                "category": "",
+                "title": "p",
+                "date": "2026-02-11T16:10:04.997879",
+                "amount": 30
+            },
+            {
+                "type": "withdraw",
+                "category": "",
+                "title": "t",
+                "date": "2026-02-11T16:09:44.032485",
+                "amount": 230000
+            },
+            {
+                "type": "withdraw",
+                "category": "",
+                "title": "yowa",
+                "date": "2026-02-11T16:09:19.089625",
+                "amount": 100000
+            },
+            {
+                "type": "deposit",
+                "category": "",
+                "title": "oit",
+                "date": "2026-02-11T16:08:24.176190",
+                "amount": 500000
+            },
+            {
+                "type": "withdraw",
+                "category": "",
+                "title": "p",
+                "date": "2026-02-11T15:41:39.287289",
+                "amount": 200000
+            },
+            {
+                "type": "withdraw",
+                "category": "",
+                "title": "tes",
+                "date": "2026-02-11T10:26:26",
+                "amount": 159000
+            },
+            {
+                "type": "withdraw",
+                "category": "",
+                "title": "tesmodeldata",
+                "date": "2026-02-11T09:24:47",
+                "amount": 200000
+            },
+            {
+                "type": "deposit",
+                "category": "",
+                "title": "kkk",
+                "date": "2026-02-10T15:25:13",
+                "amount": 500000
+            },
+            {
+                "type": "deposit",
+                "category": "",
+                "title": "qris",
+                "date": "2026-02-10T14:26:11",
+                "amount": 1500000
+            },
+            {
+                "type": "withdraw",
+                "category": "",
+                "title": "io",
+                "date": "2026-02-10T14:24:08",
+                "amount": 170000
+            },
+            {
+                "type": "withdraw",
+                "category": "",
+                "title": "hayoloh",
+                "date": "2026-02-10T14:18:47",
+                "amount": 500000
+            },
+            {
+                "type": "deposit",
+                "category": "",
+                "title": "t",
+                "date": "2026-02-10T14:18:00",
+                "amount": 603000
+            },
+            {
+                "type": "deposit",
+                "category": "",
+                "title": "yaaw",
+                "date": "2026-02-10T13:58:11",
+                "amount": 603000
+            },
+            {
+                "type": "withdraw",
+                "category": "",
+                "title": "tes16",
+                "date": "2026-03-12T00:00:00",
+                "amount": 168168
+            },
+            {
+                "type": "deposit",
+                "category": "",
+                "title": "tes13",
+                "date": "2026-03-11T15:47:00",
+                "amount": 3000000
+            },
+            {
+                "type": "withdraw",
+                "category": "",
+                "title": "tes11",
+                "date": "2026-03-10T15:45:00",
+                "amount": 100000
+            },
+            {
+                "type": "deposit",
+                "category": "",
+                "title": "p",
+                "date": "2026-03-05T00:00:00",
+                "amount": 3000000
+            },
+            {
+                "type": "deposit",
+                "category": "",
+                "title": "ya",
+                "date": "2026-02-10T10:31:31",
+                "amount": 51000
+            },
+            {
+                "type": "deposit",
+                "category": "",
+                "title": "la",
+                "date": "2026-02-10T10:05:48",
+                "amount": 62
+            },
+            {
+                "type": "deposit",
+                "category": "",
+                "title": "izinn",
+                "date": "2026-02-10T10:04:29",
+                "amount": 62000
+            },
+            {
+                "type": "deposit",
+                "category": "",
+                "title": "egiluy",
+                "date": "2026-02-10T10:02:22",
+                "amount": 200000
+            },
+            {
+                "type": "withdraw",
+                "category": "",
+                "title": "yaa",
+                "date": "2026-02-10T09:48:31",
+                "amount": 1500000
+            },
+            {
+                "type": "deposit",
+                "category": "",
+                "title": "ya",
+                "date": "2026-02-10T09:48:00",
+                "amount": 150000
+            },
+            {
+                "type": "deposit",
+                "category": "",
+                "title": "oi",
+                "date": "2026-02-09T11:58:11",
+                "amount": 1500000
+            },
+            {
+                "type": "deposit",
+                "category": "",
+                "title": "tes14",
+                "date": "2026-02-06T16:02:00",
+                "amount": 888888
+            },
+            {
+                "type": "deposit",
+                "category": "",
+                "title": "tes15",
+                "date": "2026-02-06T16:01:00",
+                "amount": 888888
+            },
+            {
+                "type": "withdraw",
+                "category": "",
+                "title": "tes12",
+                "date": "2026-02-06T15:47:00",
+                "amount": 300000
+            },
+            {
+                "type": "withdraw",
+                "category": "",
+                "title": "tes10",
+                "date": "2026-02-06T15:45:00",
+                "amount": 5000
+            },
+            {
+                "type": "deposit",
+                "category": "",
+                "title": "tes8",
+                "date": "2026-02-06T15:41:00",
+                "amount": 500000
+            },
+            {
+                "type": "deposit",
+                "category": "",
+                "title": "tes7",
+                "date": "2026-02-06T14:53:00",
+                "amount": 100000
+            },
+            {
+                "type": "deposit",
+                "category": "",
+                "title": "tes6",
+                "date": "2026-02-06T14:52:00",
+                "amount": 5000000
+            },
+            {
+                "type": "withdraw",
+                "category": "",
+                "title": "tes5",
+                "date": "2026-02-06T14:52:00",
+                "amount": 300000
+            },
+            {
+                "type": "deposit",
+                "category": "",
+                "title": "tes4",
+                "date": "2026-02-06T14:41:00",
+                "amount": 1000000
+            },
+            {
+                "type": "withdraw",
+                "category": "",
+                "title": "tes3",
+                "date": "2026-02-06T14:36:00",
+                "amount": 2000000
+            },
+            {
+                "type": "deposit",
+                "category": "",
+                "title": "tes2",
+                "date": "2026-02-06T14:33:00",
+                "amount": 150000
+            },
+            {
+                "type": "withdraw",
+                "category": "",
+                "title": "tes",
+                "date": "2026-02-06T14:08:00",
+                "amount": 150000
+            },
+            {
+                "type": "deposit",
+                "category": "",
+                "title": "Setoran Awal",
+                "date": "2026-02-06T10:30:00",
+                "amount": 500000
+            },
+            {
+                "type": "deposit",
+                "category": "",
+                "title": "tes9",
+                "date": "2026-01-31T15:41:00",
+                "amount": 500000
+            },
+            {
+                "type": "deposit",
+                "category": "sukarela",
+                "title": "y",
+                "date": "2026-02-12T13:20:17.582963",
+                "amount": 150000
+            },
+            {
+                "type": "deposit",
+                "category": "sukarela",
+                "title": "h",
+                "date": "2026-02-12T13:22:48.605365",
+                "amount": 1500000
+            },
+            {
+                "type": "withdraw",
+                "category": "sukarela",
+                "title": "m",
+                "date": "2026-03-12T00:00:00.000",
+                "amount": 200000
+            }
+        ]
+    }
+]
