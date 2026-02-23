@@ -47,7 +47,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => AuthCubit(loginUsecase)),
+        BlocProvider(
+          create: (_) => AuthCubit(loginUsecase, SecureStorageService()),
+        ),
         BlocProvider(create: (_) => HomeCubit(getHomeUsecase)),
       ],
       child: const MaterialApp(

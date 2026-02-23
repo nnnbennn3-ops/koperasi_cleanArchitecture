@@ -1,11 +1,12 @@
 import 'package:clean_architecture/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:clean_architecture/features/auth/presentation/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../cubit/settings_cubit.dart';
 import '../cubit/settings_state.dart';
-import 'rekening_bank_page.dart';
 import 'change_password_page.dart';
+import 'rekening_bank_page.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -88,7 +89,15 @@ class SettingsPage extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.logout),
                   title: Text("Logout", style: GoogleFonts.beVietnamPro()),
-                  onTap: () {},
+                  onTap: () async {
+                    await context.read<AuthCubit>().logout();
+                    if (!context.mounted) return;
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (_) => const LoginPage()),
+                      (route) => false,
+                    );
+                  },
                 ),
               ],
             );

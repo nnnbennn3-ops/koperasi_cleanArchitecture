@@ -29,6 +29,26 @@ class _LoginPageState extends State<LoginPage> {
   bool obscurePassword = true;
 
   @override
+  void initState() {
+    super.initState();
+    _loadRememberedEmail();
+  }
+
+  Future<void> _loadRememberedEmail() async {
+    final email = await context.read<AuthCubit>().getRememberedEmail();
+    final password = await context.read<AuthCubit>().getRememberedPassword();
+    if (email != null) {
+      emailController.text = email;
+      if (password != null) {
+        passwordController.text = password;
+      }
+      setState(() {
+        rememberMe = true;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0B1E8A),
@@ -271,7 +291,21 @@ class _LoginPageState extends State<LoginPage> {
                               borderRadius: BorderRadius.circular(30),
                             ),
                           ),
-                          onPressed: () {
+                          onPressed: () async {
+                            if (rememberMe) {
+                              await context.read<AuthCubit>().saveRememberMe(
+                                emailController.text.trim(),
+                                passwordController.text,
+                              );
+                            } else {
+                              await context
+                                  .read<AuthCubit>()
+                                  .clearRememberedEmail();
+                              await context
+                                  .read<AuthCubit>()
+                                  .clearRememberedPassword();
+                            }
+
                             context.read<AuthCubit>().login(
                               emailController.text.trim(),
                               passwordController.text.trim(),
