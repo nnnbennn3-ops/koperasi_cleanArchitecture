@@ -12,8 +12,6 @@ import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 import 'register_page.dart';
 
-int selectedTab = 0; //
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -22,6 +20,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  int selectedTab = 0;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -32,6 +31,13 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     _loadRememberedEmail();
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadRememberedEmail() async {

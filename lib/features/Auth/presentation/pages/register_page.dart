@@ -122,6 +122,16 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  @override
+  void dispose() {
+    memberController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    passwordController.dispose();
+    confirmController.dispose();
+    super.dispose();
+  }
+
   // ----- Header -----
   Widget _header() {
     return Container(
