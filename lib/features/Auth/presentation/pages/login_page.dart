@@ -41,8 +41,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _loadRememberedEmail() async {
-    final email = await context.read<AuthCubit>().getRememberedEmail();
-    final password = await context.read<AuthCubit>().getRememberedPassword();
+    final cubit = context.read<AuthCubit>();
+    final email = await cubit.getRememberedEmail();
+    final password = await cubit.getRememberedPassword();
     if (email != null) {
       emailController.text = email;
       if (password != null) {
@@ -298,21 +299,18 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           onPressed: () async {
+                            final cubit = context.read<AuthCubit>();
                             if (rememberMe) {
-                              await context.read<AuthCubit>().saveRememberMe(
+                              await cubit.saveRememberMe(
                                 emailController.text.trim(),
                                 passwordController.text,
                               );
                             } else {
-                              await context
-                                  .read<AuthCubit>()
-                                  .clearRememberedEmail();
-                              await context
-                                  .read<AuthCubit>()
-                                  .clearRememberedPassword();
+                              await cubit.clearRememberedEmail();
+                              await cubit.clearRememberedPassword();
                             }
 
-                            context.read<AuthCubit>().login(
+                            cubit.login(
                               emailController.text.trim(),
                               passwordController.text.trim(),
                             );

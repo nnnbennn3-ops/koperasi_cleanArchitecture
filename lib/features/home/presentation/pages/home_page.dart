@@ -178,77 +178,156 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
 
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 16),
 
-                    // ================= PAGED LIST =================
+                    // ================= TRANSACTION SUMMARY =================
                     Expanded(
-                      child: PagedListView<int, TransactionEntity>(
-                        pagingController:
-                            context.read<HomeCubit>().pagingController,
-                        builderDelegate: PagedChildBuilderDelegate<
-                          TransactionEntity
-                        >(
-                          itemBuilder: (context, trx, index) {
-                            final isDeposit = trx.type == "deposit";
-
-                            return Column(
-                              children: [
-                                Row(
+                      child: CustomScrollView(
+                        slivers: [
+                          SliverPersistentHeader(
+                            floating: true,
+                            delegate: _SummaryHeaderDelegate(
+                              minHeight: 70,
+                              maxHeight: 70,
+                              child: Container(
+                                color: const Color(0xFFF3F4F6),
+                                padding: const EdgeInsets.symmetric(
+                                  // horizontal: 20,
+                                  vertical: 10,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    CircleAvatar(
-                                      backgroundColor:
-                                          isDeposit
-                                              ? Colors.green.shade50
-                                              : Colors.red.shade50,
-                                      child: Icon(
-                                        isDeposit
-                                            ? Icons.arrow_downward
-                                            : Icons.arrow_upward,
-                                        color:
-                                            isDeposit
-                                                ? Colors.green
-                                                : Colors.red,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            trx.title,
-                                            style: GoogleFonts.beVietnamPro(
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                          Text(
-                                            "${trx.date.day} ${_monthName(trx.date.month)} ${trx.date.year}",
-                                            style: GoogleFonts.beVietnamPro(
-                                              fontSize: 12,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
                                     Text(
-                                      "${isDeposit ? "+" : "-"}${rupiah(trx.amount)}",
+                                      "Feb ${DateTime.now().year}",
                                       style: GoogleFonts.beVietnamPro(
+                                        fontSize: 15,
                                         fontWeight: FontWeight.w600,
-                                        color:
-                                            isDeposit
-                                                ? Colors.green
-                                                : Colors.red,
                                       ),
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          "Outgoing: ${rupiah(home.withdraw)}",
+                                          style: GoogleFonts.beVietnamPro(
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                        Text(
+                                          "Incoming: ${rupiah(home.deposit)}",
+                                          style: GoogleFonts.beVietnamPro(
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                                const Divider(height: 24),
-                              ],
-                            );
-                          },
-                        ),
+                              ),
+                            ),
+                          ),
+                          PagedSliverList<int, TransactionEntity>(
+                            pagingController:
+                                context.read<HomeCubit>().pagingController,
+                            builderDelegate: PagedChildBuilderDelegate<
+                              TransactionEntity
+                            >(
+                              itemBuilder: (context, trx, index) {
+                                final isDeposit = trx.type == "deposit";
+
+                                final previousTrx =
+                                    index > 0
+                                        ? context
+                                            .read<HomeCubit>()
+                                            .pagingController
+                                            .itemList![index - 1]
+                                        : null;
+
+                                final isNewMonth =
+                                    previousTrx == null ||
+                                    (trx.date.year != previousTrx.date.year ||
+                                        trx.date.month !=
+                                            previousTrx.date.month);
+
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (isNewMonth) ...[
+                                      if (index > 0) const SizedBox(height: 16),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          bottom: 16,
+                                        ),
+                                        child: Text(
+                                          "${_monthName(trx.date.month)} ${trx.date.year}",
+                                          style: GoogleFonts.beVietnamPro(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                    Row(
+                                      children: [
+                                        CircleAvatar(
+                                          backgroundColor:
+                                              isDeposit
+                                                  ? Colors.green.shade50
+                                                  : Colors.red.shade50,
+                                          child: Icon(
+                                            isDeposit
+                                                ? Icons.arrow_downward
+                                                : Icons.arrow_upward,
+                                            color:
+                                                isDeposit
+                                                    ? Colors.green
+                                                    : Colors.red,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                trx.title,
+                                                style: GoogleFonts.beVietnamPro(
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              Text(
+                                                "${trx.date.day.toString().padLeft(2, '0')} ${_monthName(trx.date.month)} ${trx.date.year}",
+                                                style: GoogleFonts.beVietnamPro(
+                                                  fontSize: 12,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Text(
+                                          "${isDeposit ? "+" : "-"}${rupiah(trx.amount)}",
+                                          style: GoogleFonts.beVietnamPro(
+                                            fontWeight: FontWeight.w600,
+                                            color:
+                                                isDeposit
+                                                    ? Colors.green
+                                                    : Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const Divider(height: 24),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -280,5 +359,37 @@ class _HomePageState extends State<HomePage> {
       "Des",
     ];
     return months[month];
+  }
+}
+
+class _SummaryHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final double minHeight;
+  final double maxHeight;
+  final Widget child;
+
+  _SummaryHeaderDelegate({
+    required this.minHeight,
+    required this.maxHeight,
+    required this.child,
+  });
+
+  @override
+  double get minExtent => minHeight;
+
+  @override
+  double get maxExtent => maxHeight;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return child;
+  }
+
+  @override
+  bool shouldRebuild(_SummaryHeaderDelegate oldDelegate) {
+    return true;
   }
 }

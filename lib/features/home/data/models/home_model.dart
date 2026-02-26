@@ -1,4 +1,5 @@
 import '../../domain/entities/home.dart';
+import '../../domain/entities/transaction.dart';
 import 'transaction_model.dart';
 
 class HomeModel extends HomeEntity {
@@ -25,13 +26,20 @@ class HomeModel extends HomeEntity {
     );
   }
 
-  HomeModel copyWith({List<TransactionModel>? transactions}) {
+  HomeModel copyWith({
+    double? wajib,
+    double? sukarela,
+    double? total,
+    double? deposit,
+    double? withdraw,
+    List<TransactionEntity>? transactions,
+  }) {
     return HomeModel(
-      total: total,
-      wajib: wajib,
-      sukarela: sukarela,
-      deposit: deposit,
-      withdraw: withdraw,
+      wajib: wajib ?? this.wajib,
+      sukarela: sukarela ?? this.sukarela,
+      total: total ?? this.total,
+      deposit: deposit ?? this.deposit,
+      withdraw: withdraw ?? this.withdraw,
       transactions: transactions ?? this.transactions,
     );
   }

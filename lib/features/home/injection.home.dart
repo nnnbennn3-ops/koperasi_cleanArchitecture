@@ -9,17 +9,17 @@ import 'presentation/cubit/home_cubit.dart';
 final sl = GetIt.instance;
 
 void initHomeInjection() {
-  /// DataSource
+  // DataSource
   sl.registerLazySingleton<HomeLocalDataSource>(() => HomeLocalDataSource());
 
-  /// Repository (INI YANG PENTING)
+  // Repository
   sl.registerLazySingleton<HomeRepository>(
     () => HomeRepositoryImpl(sl<HomeLocalDataSource>()),
   );
 
-  /// UseCase
+  // UseCase
   sl.registerLazySingleton<GetHome>(() => GetHome(sl<HomeRepository>()));
 
-  /// Cubit
+  // Cubit
   sl.registerFactory<HomeCubit>(() => HomeCubit(sl<GetHome>()));
 }
