@@ -20,7 +20,6 @@ class LoanLoaded extends LoanState {
 
 class LoanError extends LoanState {
   final String message;
-
   LoanError(this.message);
 
   @override

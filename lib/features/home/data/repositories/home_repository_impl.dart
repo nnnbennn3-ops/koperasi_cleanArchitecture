@@ -8,7 +8,7 @@ class HomeRepositoryImpl implements HomeRepository {
   HomeRepositoryImpl(this.dataSource);
 
   @override
-  Future<HomeEntity> getHome({required int page}) async {
+  Future<HomeEntity> getHome({required int page}) {
     return dataSource.getHome(page: page);
   }
 }

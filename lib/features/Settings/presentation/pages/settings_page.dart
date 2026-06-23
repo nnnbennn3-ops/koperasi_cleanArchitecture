@@ -1,5 +1,5 @@
 import 'package:clean_architecture/features/Auth/presentation/cubit/auth_cubit.dart';
-import 'package:clean_architecture/features/Auth/presentation/pages/login_page.dart';
+import 'package:clean_architecture/features/Auth/presentation/pages/auth_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -94,7 +94,7 @@ class SettingsPage extends StatelessWidget {
                     if (!context.mounted) return;
                     Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (_) => const LoginPage()),
+                      MaterialPageRoute(builder: (_) => const AuthPage()),
                       (route) => false,
                     );
                   },

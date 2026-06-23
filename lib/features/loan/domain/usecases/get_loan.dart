@@ -6,7 +6,7 @@ class GetLoan {
 
   GetLoan(this.repository);
 
-  Future<Loan> call() async {
-    return await repository.getLoan();
+  Future<Loan> call() {
+    return repository.getLoan();
   }
 }

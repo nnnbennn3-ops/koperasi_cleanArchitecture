@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../../core/utils/currency_formatter.dart';
+
 class SimulasiPinjamanPage extends StatefulWidget {
   const SimulasiPinjamanPage({super.key});
 
@@ -9,18 +11,15 @@ class SimulasiPinjamanPage extends StatefulWidget {
 }
 
 class _SimulasiPinjamanPageState extends State<SimulasiPinjamanPage> {
-  double jumlahPinjaman = 0;
-  double tenor = 10;
+  double _jumlahPinjaman = 3000000;
+  double _tenor = 6;
 
-  final double bungaPerBulan = 0.01; // 1% flat per bulan
+  static const double _bungaPerBulan = 0.01;
 
-  double cicilanBulanan() {
-    final totalBunga = jumlahPinjaman * bungaPerBulan * tenor;
-    return (jumlahPinjaman + totalBunga) / tenor;
-  }
-
-  String rupiah(num value) {
-    return 'Rp ${value.toStringAsFixed(0).replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => '.')}';
+  double get _cicilanBulanan {
+    if (_jumlahPinjaman == 0) return 0;
+    final totalBunga = _jumlahPinjaman * _bungaPerBulan * _tenor;
+    return (_jumlahPinjaman + totalBunga) / _tenor;
   }
 
   @override
@@ -30,146 +29,115 @@ class _SimulasiPinjamanPageState extends State<SimulasiPinjamanPage> {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFF8B0000), // merah atas
-            Color.fromARGB(255, 215, 101, 101), // transisi
-            Colors.white, // putih bawah
-          ],
+          colors: [Color(0xFF8B0000), Color(0xFFD46565), Colors.white],
+          stops: [0.0, 0.5, 1.0],
         ),
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: Column(
-          children: [
-            _header(),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                child: Transform.translate(
-                  offset: const Offset(0, -10),
+        body: SafeArea(
+          child: Column(
+            children: [
+              _buildHeader(),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
                   child: Column(
-                    children: [_cardJumlahPinjaman(), _cardTenor()],
+                    children: [
+                      _buildSliderCard(
+                        title: 'Jumlah Pinjaman',
+                        valueText: _jumlahPinjaman.toRupiah(),
+                        slider: Slider(
+                          value: _jumlahPinjaman,
+                          min: 100000,
+                          max: 10000000,
+                          divisions: 99,
+                          onChanged: (v) => setState(() => _jumlahPinjaman = v),
+                        ),
+                      ),
+                      _buildSliderCard(
+                        title: 'Tenor (bulan)',
+                        valueText: _tenor.toInt().toString(),
+                        slider: Slider(
+                          value: _tenor,
+                          min: 1,
+                          max: 48,
+                          divisions: 48,
+                          onChanged: (v) => setState(() => _tenor = v),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ),
-            _buttonKembali(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // ================= HEADER MERAH =================
-
-  Widget _header() {
-    return SizedBox(
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.fromLTRB(20, 56, 24, 20),
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF8B0000), Color(0xFFB00000)],
+              _buildButton(),
+            ],
           ),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.arrow_back, color: Colors.white),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+      color: Colors.transparent,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              IconButton(
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                'Simulasi Pinjaman',
+                style: GoogleFonts.beVietnamPro(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
                 ),
-                const SizedBox(width: 10),
-                Text(
-                  'Simulasi Pinjaman',
-                  style: GoogleFonts.beVietnamPro(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'Perkiraan Cicilan kamu',
-              style: GoogleFonts.beVietnamPro(
-                color: Colors.white,
-                fontSize: 23,
-                fontWeight: FontWeight.w400,
               ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Perkiraan Cicilan Kamu',
+            style: GoogleFonts.beVietnamPro(color: Colors.white, fontSize: 18),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '${_cicilanBulanan.toRupiah()}/Bulan',
+            style: GoogleFonts.beVietnamPro(
+              color: Colors.white,
+              fontSize: 28,
+              fontWeight: FontWeight.w700,
             ),
-            const SizedBox(height: 6),
-            Text(
-              '${rupiah(cicilanBulanan())}/Bulan',
-              style: GoogleFonts.beVietnamPro(
-                color: Colors.white,
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-              ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Selama ${_tenor.toInt()} Bulan',
+            style: GoogleFonts.beVietnamPro(color: Colors.white, fontSize: 18),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '*Perhitungan dengan suku bunga 1% flat per bulan',
+            style: GoogleFonts.beVietnamPro(
+              color: Colors.white70,
+              fontSize: 13,
             ),
-            const SizedBox(height: 6),
-            Text(
-              'Selama ${tenor.toInt()} Bulan',
-              style: GoogleFonts.beVietnamPro(
-                color: Colors.white,
-                fontSize: 23,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              '*Perhitungan dengan suku bunga 1%\nflat per bulan',
-              style: GoogleFonts.beVietnamPro(
-                color: Colors.white70,
-                fontSize: 16,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  // ================= CARD JUMLAH PINJAMAN =================
-
-  Widget _cardJumlahPinjaman() {
-    return _sliderCard(
-      title: 'Jumlah Pinjaman',
-      valueText: rupiah(jumlahPinjaman),
-      slider: Slider(
-        value: jumlahPinjaman,
-        min: 0,
-        max: 10000000,
-        divisions: 100,
-        onChanged: (v) => setState(() => jumlahPinjaman = v),
-      ),
-    );
-  }
-
-  // ================= CARD TENOR =================
-  Widget _cardTenor() {
-    return _sliderCard(
-      title: 'Tenor (bulan)',
-      valueText: tenor.toInt().toString(),
-      slider: Slider(
-        value: tenor,
-        min: 1,
-        max: 48,
-        divisions: 47,
-        onChanged: (v) => setState(() => tenor = v),
-      ),
-    );
-  }
-
-  // ================= TEMPLATE CARD =================
-
-  Widget _sliderCard({
+  Widget _buildSliderCard({
     required String title,
     required String valueText,
     required Widget slider,
@@ -190,27 +158,28 @@ class _SimulasiPinjamanPageState extends State<SimulasiPinjamanPage> {
           Text(
             title,
             style: GoogleFonts.beVietnamPro(
-              fontSize: 15,
-              color: Colors.grey[700],
+              fontSize: 14,
+              color: Colors.grey.shade600,
             ),
           ),
           const SizedBox(height: 6),
           Text(
             valueText,
             style: GoogleFonts.beVietnamPro(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+              color: Colors.black87,
             ),
           ),
-          const Divider(height: 24),
+          const Divider(height: 20),
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
               trackHeight: 4,
-              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
-              overlayShape: const RoundSliderOverlayShape(overlayRadius: 16),
-              activeTrackColor: const Color(0xFF1E3A8A),
-              inactiveTrackColor: Colors.blue.shade400,
-              thumbColor: const Color(0xFF1E3A8A),
+              activeTrackColor: const Color(0xFF0D1461),
+              inactiveTrackColor: Colors.blue.shade100,
+              thumbColor: const Color(0xFF0D1461),
+              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
+              overlayShape: const RoundSliderOverlayShape(overlayRadius: 20),
             ),
             child: slider,
           ),
@@ -219,17 +188,15 @@ class _SimulasiPinjamanPageState extends State<SimulasiPinjamanPage> {
     );
   }
 
-  // ================= BUTTON BAWAH =================
-
-  Widget _buttonKembali() {
+  Widget _buildButton() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
       child: SizedBox(
         width: double.infinity,
-        height: 50,
+        height: 52,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF00006F),
+            backgroundColor: const Color(0XFF0D1461),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30),
             ),
@@ -237,7 +204,7 @@ class _SimulasiPinjamanPageState extends State<SimulasiPinjamanPage> {
           onPressed: () => Navigator.pop(context),
           child: Text(
             'Oke, kembali ke pinjaman',
-            style: GoogleFonts.beVietnamPro(fontSize: 16),
+            style: GoogleFonts.beVietnamPro(fontSize: 16, color: Colors.white),
           ),
         ),
       ),

@@ -1,34 +1,36 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../core/utils/currency_formatter.dart';
+import '../../domain/entities/installment.dart';
 import '../../domain/entities/loan.dart';
 import '../cubit/loan_cubit.dart';
 import '../cubit/loan_state.dart';
-import 'package:clean_architecture/features/loan/presentation/pages/simulasi_pinjaman_page.dart';
+import 'simulasi_pinjaman_page.dart';
 
 class LoanPage extends StatelessWidget {
   const LoanPage({super.key});
 
-  String rupiah(double v) {
-    return 'Rp ${v.toStringAsFixed(0).replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => '.')}'; //konversi ke format rupiah
-  }
+  static const _kDarkRed = Color(0xFF8B0000);
+  static const _kRed = Color(0xFFB00000);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffF4F5F7),
+      backgroundColor: const Color(0xFFF5F6FA),
       appBar: AppBar(
         title: Text(
           'Pinjaman',
           style: GoogleFonts.beVietnamPro(
             fontSize: 20,
             fontWeight: FontWeight.w600,
-            color: Colors.black,
+            color: Colors.black87,
           ),
         ),
         backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        foregroundColor: Colors.black87,
         elevation: 0,
       ),
       body: BlocBuilder<LoanCubit, LoanState>(
@@ -36,144 +38,240 @@ class LoanPage extends StatelessWidget {
           if (state is LoanLoading) {
             return const Center(child: CircularProgressIndicator());
           }
-
-          if (state is LoanLoaded) {
-            final loan = state.loan;
-            return Column(
-              children: [
-                _ringkasan(context, loan),
-                const SizedBox(height: 12),
-                _infoSection(loan),
-                const SizedBox(height: 8),
-                Expanded(child: _historySection(loan)),
-              ],
+          if (state is LoanError) {
+            return Center(
+              child: Text(
+                state.message,
+                style: GoogleFonts.beVietnamPro(color: Colors.red),
+              ),
             );
           }
-
-          if (state is LoanError) {
-            return Center(child: Text(state.message));
+          if (state is LoanLoaded) {
+            return _buildContent(context, state.loan);
           }
-
           return const SizedBox();
         },
       ),
     );
   }
 
-  //Widget Ringkasan Pinjeman
-  Widget _ringkasan(BuildContext context, Loan loan) {
+  Widget _buildContent(BuildContext context, Loan loan) {
     final summary = loan.summary;
     final progress = summary.paidInstallment / summary.totalInstallment;
 
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Column(
-          children: [
-            const SizedBox(height: 8),
-            Stack(
-              alignment: Alignment.center,
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          // ── GAUGE CARD ──────────────────────────────────────────
+          Container(
+            margin: const EdgeInsets.all(16),
+            padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
               children: [
+                // Icon
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: _kDarkRed,
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: const Icon(
+                    Icons.volunteer_activism,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // Half circle gauge - untuk sisa pinjaman
                 SizedBox(
                   width: 180,
                   height: 180,
-                  child: CircularProgressIndicator(
-                    value: progress,
-                    strokeWidth: 12,
-                    backgroundColor: Colors.red.shade100,
-                    valueColor: const AlwaysStoppedAnimation<Color>(
-                      Color(0xFFB00000),
-                    ),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      CustomPaint(
+                        size: const Size(180, 180),
+                        painter: _CircleGaugePainter(progress: progress),
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Sisa Pinjaman',
+                            style: GoogleFonts.beVietnamPro(
+                              fontSize: 13,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            summary.remainingLoan.toRupiah(),
+                            style: GoogleFonts.beVietnamPro(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              color: _kRed,
+                            ),
+                          ),
+                          Text(
+                            'Dari ${summary.totalLoan.toRupiah()}',
+                            style: GoogleFonts.beVietnamPro(
+                              fontSize: 12,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-                Column(
+
+                //const SizedBox(height: 2),
+
+                // Tombol
+                Row(
                   children: [
-                    Text(
-                      'Sisa Pinjaman',
-                      style: GoogleFonts.beVietnamPro(
-                        fontSize: 14,
-                        color: Colors.grey,
+                    Expanded(
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: _kRed),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: () {},
+                        child: Text(
+                          'Lunasi Semua',
+                          style: GoogleFonts.beVietnamPro(color: _kRed),
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      rupiah(summary.remainingLoan),
-                      style: GoogleFonts.beVietnamPro(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFFB00000),
-                      ),
-                    ),
-                    Text(
-                      'Dari ${rupiah(summary.totalLoan)}',
-                      style: GoogleFonts.beVietnamPro(
-                        fontSize: 12,
-                        color: Colors.grey,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _kRed,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const SimulasiPinjamanPage(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          'Simulasi',
+                          style: GoogleFonts.beVietnamPro(color: Colors.white),
+                        ),
                       ),
                     ),
                   ],
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-            Row(
+          ),
+
+          // ── INFO BAR HIJAU ──────────────────────────────────────
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFECFDF5),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0xFF6EE7B7)),
+            ),
+            child: Row(
               children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'Lunasi Semua',
-                      style: GoogleFonts.beVietnamPro(color: Colors.red),
-                    ),
-                  ),
+                const Icon(
+                  Icons.info_outline,
+                  color: Color(0xFF059669),
+                  size: 20,
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFB00000),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const SimulasiPinjamanPage(),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      'Simulasi',
-                      style: GoogleFonts.beVietnamPro(color: Colors.white),
-                    ),
+                const SizedBox(width: 10),
+                Text(
+                  'Sudah membayar ${summary.paidInstallment} '
+                  'dari total ${summary.totalInstallment} cicilan',
+                  style: GoogleFonts.beVietnamPro(
+                    fontSize: 13,
+                    color: const Color(0xFF059669),
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // ----- INFO -----
-  Widget _infoSection(Loan loan) {
-    final summary = loan.summary;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-          _infoRow(
-            'Sudah Membayar',
-            '${summary.paidInstallment} dari total ${summary.totalInstallment} cicilan',
           ),
-          _infoRow('Pembayaran Selanjutnya', summary.nextPaymentDate),
-          _infoRow('Pokok Hutang Dibayar', rupiah(summary.principalPaid)),
+
+          const SizedBox(height: 16),
+
+          // ── INFO ROWS ───────────────────────────────────────────
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              children: [
+                _infoRow('Pembayaran Selanjutnya', summary.nextPaymentDate),
+                _infoRow(
+                  'Pokok Hutang Dibayar',
+                  summary.principalPaid.toRupiah(),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          // ── HISTORY TAGIHAN ─────────────────────────────────────
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                  child: Text(
+                    'History Tagihan',
+                    style: GoogleFonts.beVietnamPro(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: loan.installments.length,
+                  itemBuilder:
+                      (_, i) => _installmentItem(
+                        loan.installments[i],
+                        loan.summary.totalInstallment,
+                      ),
+                ),
+                const SizedBox(height: 8),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 24),
         ],
       ),
     );
@@ -181,7 +279,7 @@ class LoanPage extends StatelessWidget {
 
   Widget _infoRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -197,6 +295,7 @@ class LoanPage extends StatelessWidget {
             style: GoogleFonts.beVietnamPro(
               fontSize: 13,
               fontWeight: FontWeight.w600,
+              color: Colors.black87,
             ),
           ),
         ],
@@ -204,70 +303,121 @@ class LoanPage extends StatelessWidget {
     );
   }
 
-  // ----- HISTORY -----
-  Widget _historySection(Loan loan) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      child: ListView.builder(
-        itemCount: loan.installments.length,
-        itemBuilder: (context, index) {
-          final trx = loan.installments[index];
-          final lunas = trx.status == 'paid';
-
-          return Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Cicilan ${trx.installmentNo} dari ${loan.summary.totalInstallment}',
-                          style: GoogleFonts.beVietnamPro(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Text(
-                          trx.date,
-                          style: GoogleFonts.beVietnamPro(
-                            fontSize: 12,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
+  Widget _installmentItem(Installment trx, int total) {
+    final isPaid = trx.status == 'paid';
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Cicilan ${trx.installmentNo} dari $total',
+                    style: GoogleFonts.beVietnamPro(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: Colors.black87,
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          rupiah(trx.amount),
-                          style: GoogleFonts.beVietnamPro(
-                            color: lunas ? Colors.black : Colors.grey,
-                          ),
-                        ),
-                        Text(
-                          lunas ? 'Lunas' : 'Belum ada tagihan',
-                          style: GoogleFonts.beVietnamPro(
-                            fontSize: 12,
-                            color: lunas ? Colors.green : Colors.grey,
-                          ),
-                        ),
-                      ],
+                  ),
+                  Text(
+                    trx.date,
+                    style: GoogleFonts.beVietnamPro(
+                      fontSize: 12,
+                      color: Colors.grey,
                     ),
-                  ],
-                ),
-                const Divider(),
-              ],
-            ),
-          );
-        },
-      ),
+                  ),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    trx.amount.toRupiah(),
+                    style: GoogleFonts.beVietnamPro(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: isPaid ? Colors.black87 : Colors.grey,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color:
+                          isPaid
+                              ? const Color(0xFFECFDF5)
+                              : Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      isPaid ? 'Lunas' : 'Belum ada tagihan',
+                      style: GoogleFonts.beVietnamPro(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                        color: isPaid ? const Color(0xFF059669) : Colors.grey,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        Divider(
+          color: Colors.grey.shade100,
+          height: 1,
+          indent: 16,
+          endIndent: 16,
+        ),
+      ],
     );
   }
+}
+
+// ── FULL CIRCLE GAUGE PAINTER ──────────────────────────────────────────────────
+class _CircleGaugePainter extends CustomPainter {
+  final double progress;
+  const _CircleGaugePainter({required this.progress});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = size.width / 2 - 10;
+    const strokeW = 14.0;
+
+    final bgPaint =
+        Paint()
+          ..color = Colors.red.shade100
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = strokeW
+          ..strokeCap = StrokeCap.round;
+
+    final fgPaint =
+        Paint()
+          ..color = const Color(0xFFB00000)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = strokeW
+          ..strokeCap = StrokeCap.round;
+
+    final rect = Rect.fromCircle(center: center, radius: radius);
+
+    // Mulai dari 150 derajat (kiri bawah), sweep 240 derajat (ke kanan bawah)
+    const startAngle = 150 * math.pi / 180;
+    const sweepFull = 240 * math.pi / 180;
+
+    // Background arc
+    canvas.drawArc(rect, startAngle, sweepFull, false, bgPaint);
+
+    // Progress arc
+    canvas.drawArc(rect, startAngle, sweepFull * progress, false, fgPaint);
+  }
+
+  @override
+  bool shouldRepaint(_CircleGaugePainter old) => old.progress != progress;
 }

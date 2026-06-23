@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'features/Auth/presentation/cubit/auth_cubit.dart';
 import 'features/home/presentation/cubit/home_cubit.dart';
-import 'features/Auth/presentation/pages/login_page.dart';
+import 'features/Auth/presentation/pages/auth_page.dart';
 
 import 'injection_container.dart';
 
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       ],
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: LoginPage(),
+        home: AuthPage(),
       ),
     );
   }

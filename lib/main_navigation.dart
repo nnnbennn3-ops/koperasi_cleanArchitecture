@@ -1,8 +1,11 @@
 import 'package:clean_architecture/features/Settings/data/datasources/settings_local_datasource.dart';
 import 'package:clean_architecture/features/Settings/data/repositories/settings_repository_impl.dart';
 import 'package:flutter/material.dart';
+
 import '../../features/home/presentation/pages/home_page.dart';
-import '../../features/home/presentation/pages/portofolio_page.dart';
+import 'features/portofolio/presentation/pages/portofolio_page.dart';
+import 'package:clean_architecture/features/portofolio/presentation/cubit/portofolio_cubit.dart';
+import 'package:clean_architecture/injection_container.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:clean_architecture/features/form/data/datasources/form_local_datasource.dart';
@@ -27,8 +30,23 @@ class _MainNavigationState extends State<MainNavigation> {
 
   final List<Widget> _pages = [
     const HomePage(),
-    const PortfolioPage(),
-
+    BlocProvider(
+      create: (_) => sl<PortofolioCubit>()..fetch(),
+      child: BlocBuilder<PortofolioCubit, PortofolioState>(
+        builder: (context, state) {
+          if (state is PortofolioLoading || state is PortofolioInitial) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state is PortofolioLoaded) {
+            return PortfolioPage(items: state.items, totalSaldo: state.total);
+          }
+          if (state is PortofolioError) {
+            return Center(child: Text(state.message));
+          }
+          return const SizedBox();
+        },
+      ),
+    ),
     BlocProvider(
       create: (_) {
         final dataSource = FormLocalDataSource();
@@ -38,7 +56,6 @@ class _MainNavigationState extends State<MainNavigation> {
       },
       child: const FormPage(),
     ),
-
     BlocProvider(
       create: (_) {
         final dataSource = SettingsLocalDataSource();
@@ -50,34 +67,113 @@ class _MainNavigationState extends State<MainNavigation> {
     ),
   ];
 
+  static const _kNavy = Color(0xFF0D1461);
+
+  static const _navItems = [
+    _NavItem(
+      icon: Icons.home_outlined,
+      activeIcon: Icons.home,
+      label: 'Beranda',
+    ),
+    _NavItem(
+      icon: Icons.pie_chart_outline,
+      activeIcon: Icons.pie_chart,
+      label: 'Portofolio',
+    ),
+    _NavItem(
+      icon: Icons.description_outlined,
+      activeIcon: Icons.description,
+      label: 'Formulir',
+    ),
+    _NavItem(
+      icon: Icons.settings_outlined,
+      activeIcon: Icons.settings,
+      label: 'Pengaturan',
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(index: _currentIndex, children: _pages),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.pie_chart),
-            label: 'Portofolio',
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 16,
+              offset: const Offset(0, -4),
+            ),
+          ],
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            child: Row(
+              children: List.generate(_navItems.length, (index) {
+                final item = _navItems[index];
+                final isActive = _currentIndex == index;
+
+                return Expanded(
+                  child: GestureDetector(
+                    onTap: () => setState(() => _currentIndex = index),
+                    behavior: HitTestBehavior.opaque,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Pill background hanya untuk item aktif
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          curve: Curves.easeInOut,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color:
+                                isActive
+                                    ? _kNavy.withOpacity(0.12)
+                                    : Colors.transparent,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Icon(
+                            isActive ? item.activeIcon : item.icon,
+                            color: isActive ? _kNavy : Colors.grey.shade500,
+                            size: 24,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          item.label,
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight:
+                                isActive ? FontWeight.w600 : FontWeight.w400,
+                            color: isActive ? _kNavy : Colors.grey.shade500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.description),
-            label: 'Formulir',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Pengaturan',
-          ),
-        ],
+        ),
       ),
     );
   }
+}
+
+class _NavItem {
+  final IconData icon;
+  final IconData activeIcon;
+  final String label;
+
+  const _NavItem({
+    required this.icon,
+    required this.activeIcon,
+    required this.label,
+  });
 }

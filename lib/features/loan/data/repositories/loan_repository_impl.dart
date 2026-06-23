@@ -8,7 +8,7 @@ class LoanRepositoryImpl implements LoanRepository {
   LoanRepositoryImpl(this.localDataSource);
 
   @override
-  Future<Loan> getLoan() async {
-    return await localDataSource.getLoan();
+  Future<Loan> getLoan() {
+    return localDataSource.getLoan();
   }
 }

@@ -6,7 +6,7 @@ class Login {
 
   Login(this.repository);
 
-  Future<User> call(String email, String password) {
-    return repository.login(email, password);
+  Future<User> call(String identifier, String password) {
+    return repository.login(identifier, password);
   }
 }

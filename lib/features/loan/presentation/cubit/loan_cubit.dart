@@ -7,7 +7,7 @@ class LoanCubit extends Cubit<LoanState> {
 
   LoanCubit(this.getLoan) : super(LoanInitial());
 
-  void fetchLoan() async {
+  Future<void> fetchLoan() async {
     try {
       emit(LoanLoading());
       final loan = await getLoan();

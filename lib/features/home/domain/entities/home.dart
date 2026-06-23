@@ -2,6 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'transaction.dart';
 
 class HomeEntity extends Equatable {
+  final String userName;
+  final String memberId;
   final double wajib;
   final double sukarela;
   final double total;
@@ -10,6 +12,8 @@ class HomeEntity extends Equatable {
   final List<TransactionEntity> transactions;
 
   const HomeEntity({
+    required this.userName,
+    required this.memberId,
     required this.wajib,
     required this.sukarela,
     required this.total,
@@ -20,6 +24,8 @@ class HomeEntity extends Equatable {
 
   @override
   List<Object?> get props => [
+    userName,
+    memberId,
     wajib,
     sukarela,
     total,
