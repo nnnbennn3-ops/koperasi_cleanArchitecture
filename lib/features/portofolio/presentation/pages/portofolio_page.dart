@@ -5,15 +5,15 @@ import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/utils/currency_formatter.dart';
-import '../../data/models/portofolio_model.dart';
+import '../../domain/entities/portofolio_item.dart';
 import '../../../simpanan/presentation/pages/simpanan_wajib_page.dart';
 import '../../../simpanan/presentation/pages/simpanan_sukarela_page.dart';
-
 import 'package:clean_architecture/features/loan/presentation/cubit/loan_cubit.dart';
 import 'package:clean_architecture/features/loan/presentation/pages/loan_page.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PortfolioPage extends StatelessWidget {
-  final List<PortofolioItem> items;
+  final List<PortofolioItemEntity> items;
   final double totalSaldo;
 
   const PortfolioPage({
@@ -58,7 +58,7 @@ class PortfolioPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //TITLE
+            // -------- TITLE --------------
             const Padding(
               padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Text(
@@ -71,7 +71,7 @@ class PortfolioPage extends StatelessWidget {
               ),
             ),
 
-            //TOTAL SALDO
+            //--------------- TOTAL SALDO -------------------
             Container(
               margin: const EdgeInsets.fromLTRB(20, 16, 20, 0),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -104,7 +104,7 @@ class PortfolioPage extends StatelessWidget {
 
             const SizedBox(height: 16),
 
-            //CARD LIST
+            //---------------- CARD LIST ---------------------------
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -118,7 +118,7 @@ class PortfolioPage extends StatelessWidget {
     );
   }
 
-  Widget _buildCard(BuildContext context, PortofolioItem item) {
+  Widget _buildCard(BuildContext context, PortofolioItemEntity item) {
     switch (item.type) {
       case 'wajib':
         return _wajibCard(context, item);
@@ -131,8 +131,8 @@ class PortfolioPage extends StatelessWidget {
     }
   }
 
-  // SIMPANAN WAJIB
-  Widget _wajibCard(BuildContext context, PortofolioItem item) {
+  //--------------------- SIMPANAN WAJIB ------------------------
+  Widget _wajibCard(BuildContext context, PortofolioItemEntity item) {
     return GestureDetector(
       onTap: () => _navigate(context, 'wajib'),
       child: Container(
@@ -203,8 +203,8 @@ class PortfolioPage extends StatelessWidget {
     );
   }
 
-  //SIMPANAN SUKARELA
-  Widget _sukarelaCard(BuildContext context, PortofolioItem item) {
+  // --------------- SIMPANAN SUKARELA --------------------------
+  Widget _sukarelaCard(BuildContext context, PortofolioItemEntity item) {
     return GestureDetector(
       onTap: () => _navigate(context, 'sukarela'),
       child: Container(
@@ -274,9 +274,8 @@ class PortfolioPage extends StatelessWidget {
     );
   }
 
-  //PINJAMAN
-  Widget _pinjamanCard(BuildContext context, PortofolioItem item) {
-    //hardcode dulu
+  // ------------------------ PINJAMAN -----------------------------
+  Widget _pinjamanCard(BuildContext context, PortofolioItemEntity item) {
     const progress = 0.5;
 
     return GestureDetector(
@@ -314,20 +313,19 @@ class PortfolioPage extends StatelessWidget {
                   Text(
                     'Sisa Pinjaman',
                     style: GoogleFonts.beVietnamPro(
-                      fontSize: 22,
+                      fontSize: 12,
+                      color: Colors.white60,
+                    ),
+                  ),
+                  Text(
+                    item.total.toRupiah(),
+                    style: GoogleFonts.beVietnamPro(
+                      fontSize: 20,
                       fontWeight: FontWeight.w800,
                       color: Colors.white,
                     ),
                   ),
-                  const SizedBox(height: 2),
-                  Text(
-                    'Rp 1.000.000',
-                    style: GoogleFonts.beVietnamPro(
-                      fontSize: 18,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
+                  const SizedBox(height: 4),
                   Text(
                     'Tanggal Cicilan',
                     style: GoogleFonts.beVietnamPro(
@@ -356,13 +354,8 @@ class PortfolioPage extends StatelessWidget {
             const SizedBox(width: 16),
             Column(
               children: [
-                const Icon(
-                  Icons.monetization_on,
-                  color: Colors.white70,
-                  size: 28,
-                ),
-                const SizedBox(height: 8),
-                //Semi circle progress bar
+                const FaIcon(FontAwesomeIcons.sackDollar, color: Colors.white),
+                const SizedBox(height: 15),
                 SizedBox(
                   width: 80,
                   height: 80,
@@ -371,17 +364,14 @@ class PortfolioPage extends StatelessWidget {
                     children: [
                       CustomPaint(
                         size: const Size(80, 80),
-                        painter: _SemiCirclePainter(progress: progress),
+                        painter: _CirclePainter(progress: progress),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16),
-                        child: Text(
-                          '${(progress * 100).toInt()}%',
-                          style: GoogleFonts.beVietnamPro(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16,
-                          ),
+                      Text(
+                        '${(progress * 100).toInt()}%',
+                        style: GoogleFonts.beVietnamPro(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
                         ),
                       ),
                     ],
@@ -396,16 +386,16 @@ class PortfolioPage extends StatelessWidget {
   }
 }
 
-class _SemiCirclePainter extends CustomPainter {
+// LINGKARAN
+class _CirclePainter extends CustomPainter {
   final double progress;
-  const _SemiCirclePainter({required this.progress});
+  const _CirclePainter({required this.progress});
 
   @override
   void paint(Canvas canvas, Size size) {
-    final cx = size.width / 2;
-    final cy = size.height / 1.75;
-    final radius = size.width * 0.45;
-    const strokeW = 7.0;
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = size.width / 2 - 6;
+    const strokeW = 6.0;
 
     final bgPaint =
         Paint()
@@ -421,18 +411,10 @@ class _SemiCirclePainter extends CustomPainter {
           ..strokeWidth = strokeW
           ..strokeCap = StrokeCap.round;
 
-    // Background arc (full semicircle)
-    canvas.drawArc(
-      Rect.fromCircle(center: Offset(cx, cy), radius: radius),
-      -math.pi / 2,
-      2 * math.pi,
-      false,
-      bgPaint,
-    );
+    canvas.drawCircle(center, radius, bgPaint);
 
-    // Progress arc
     canvas.drawArc(
-      Rect.fromCircle(center: Offset(cx, cy), radius: radius),
+      Rect.fromCircle(center: center, radius: radius),
       -math.pi / 2,
       2 * math.pi * progress,
       false,
@@ -441,5 +423,5 @@ class _SemiCirclePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_SemiCirclePainter old) => old.progress != progress;
+  bool shouldRepaint(_CirclePainter old) => old.progress != progress;
 }

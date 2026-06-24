@@ -9,6 +9,7 @@ import '../../domain/entities/loan.dart';
 import '../cubit/loan_cubit.dart';
 import '../cubit/loan_state.dart';
 import 'simulasi_pinjaman_page.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LoanPage extends StatelessWidget {
   const LoanPage({super.key});
@@ -86,10 +87,9 @@ class LoanPage extends StatelessWidget {
                     color: _kDarkRed,
                     borderRadius: BorderRadius.circular(14),
                   ),
-                  child: const Icon(
-                    Icons.volunteer_activism,
+                  child: const FaIcon(
+                    FontAwesomeIcons.sackDollar,
                     color: Colors.white,
-                    size: 28,
                   ),
                 ),
 

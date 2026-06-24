@@ -100,7 +100,14 @@ class _AuthPageState extends State<AuthPage>
       padding: const EdgeInsets.symmetric(vertical: 32),
       child: Column(
         children: [
-          Image.asset('assets/logo_koperasi.png', width: 120, height: 120),
+          ClipOval(
+            child: Image.asset(
+              'assets/logo_koperasi.png',
+              width: 120,
+              height: 120,
+              fit: BoxFit.cover,
+            ),
+          ),
           const SizedBox(height: 16),
           Text(
             'Koperasi Karyawan',

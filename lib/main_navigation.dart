@@ -3,8 +3,6 @@ import 'package:clean_architecture/features/Settings/data/repositories/settings_
 import 'package:flutter/material.dart';
 
 import '../../features/home/presentation/pages/home_page.dart';
-import 'features/portofolio/presentation/pages/portofolio_page.dart';
-import 'package:clean_architecture/features/portofolio/presentation/cubit/portofolio_cubit.dart';
 import 'package:clean_architecture/injection_container.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,6 +15,10 @@ import 'package:clean_architecture/features/form/presentation/pages/form_page.da
 import 'package:clean_architecture/features/Settings/domain/usecases/get_profile.dart';
 import 'package:clean_architecture/features/Settings/presentation/cubit/settings_cubit.dart';
 import 'package:clean_architecture/features/Settings/presentation/pages/settings_page.dart';
+
+import 'package:clean_architecture/features/portofolio/presentation/cubit/portofolio_state.dart';
+import 'features/portofolio/presentation/pages/portofolio_page.dart';
+import 'package:clean_architecture/features/portofolio/presentation/cubit/portofolio_cubit.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -38,7 +40,10 @@ class _MainNavigationState extends State<MainNavigation> {
             return const Center(child: CircularProgressIndicator());
           }
           if (state is PortofolioLoaded) {
-            return PortfolioPage(items: state.items, totalSaldo: state.total);
+            return PortfolioPage(
+              items: state.portofolio.items,
+              totalSaldo: state.portofolio.totalSaldo,
+            );
           }
           if (state is PortofolioError) {
             return Center(child: Text(state.message));

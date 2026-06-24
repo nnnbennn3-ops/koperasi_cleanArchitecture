@@ -16,6 +16,8 @@ dependencies:
   infinite_scroll_pagination: ^4.0.0
   flutter_secure_storage: ^9.0.0
   get_it: ^7.6.0
+  font_awesome_flutter: ^10.8.0
+
 
 dev_dependencies:
   flutter_test:
@@ -31,3 +33,5 @@ flutter:
     - assets/data/home.json
     - assets/data/portofolio.json
     - assets/profil.jpg
+    - assets/data/simpanan_wajib.json
+    - assets/data/simpanan_sukarela.json

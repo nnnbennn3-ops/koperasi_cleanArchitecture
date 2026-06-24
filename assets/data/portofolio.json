@@ -3,17 +3,17 @@
     "items": [
         {
             "title": "Simpanan Wajib",
-            "total": 10500000,
+            "total": 10000000,
             "type": "wajib"
         },
         {
             "title": "Simpanan Sukarela",
-            "total": 2000000,
+            "total": 2500000,
             "type": "sukarela"
         },
         {
             "title": "Pinjaman",
-            "total": 3000000,
+            "total": 1000000,
             "type": "pinjaman"
         }
     ]

@@ -44,6 +44,8 @@ class _SimpananSukarelaView extends StatelessWidget {
       '${d.day.toString().padLeft(2, '0')} ${_months[d.month]} ${d.year}, '
       '${d.hour.toString().padLeft(2, '0')}.${d.minute.toString().padLeft(2, '0')}';
 
+  String _monthLabel(DateTime d) => '${_months[d.month]} ${d.year}';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,6 +54,7 @@ class _SimpananSukarelaView extends StatelessWidget {
         builder: (context, state) {
           return CustomScrollView(
             slivers: [
+              // ── APP BAR ────────────────────────────────────────
               SliverAppBar(
                 backgroundColor: const Color(0xFFF5F6FA),
                 foregroundColor: Colors.black87,
@@ -80,7 +83,7 @@ class _SimpananSukarelaView extends StatelessWidget {
                   ),
                 )
               else if (state is SimpananLoaded) ...[
-                // ── SALDO AREA ────────────────────────────────────
+                // ── SALDO AREA ──────────────────────────────────
                 SliverToBoxAdapter(
                   child: Stack(
                     clipBehavior: Clip.none,
@@ -142,11 +145,9 @@ class _SimpananSukarelaView extends StatelessWidget {
                   ),
                 ),
 
-                SliverToBoxAdapter(
-                  child: SizedBox(height: 64 + 90 + 24 - 120 + 24),
-                ),
+                const SliverToBoxAdapter(child: SizedBox(height: 82)),
 
-                // ── HISTORY SECTION ───────────────────────────────
+                // ── HISTORY SECTION ─────────────────────────────
                 SliverToBoxAdapter(
                   child: Container(
                     decoration: const BoxDecoration(
@@ -177,7 +178,11 @@ class _SimpananSukarelaView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Jun 2025',
+                                state.simpanan.transactions.isNotEmpty
+                                    ? _monthLabel(
+                                      state.simpanan.transactions.first.date,
+                                    )
+                                    : '',
                                 style: GoogleFonts.beVietnamPro(
                                   fontSize: 13,
                                   color: Colors.black54,

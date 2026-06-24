@@ -1,19 +1,34 @@
-class PortofolioItem {
-  final String title;
-  final int total;
-  final String type;
+import '../../domain/entities/portofolio.dart';
+import '../../domain/entities/portofolio_item.dart';
 
-  PortofolioItem({
-    required this.title,
-    required this.total,
-    required this.type,
+class PortofolioItemModel extends PortofolioItemEntity {
+  const PortofolioItemModel({
+    required super.title,
+    required super.total,
+    required super.type,
   });
 
-  factory PortofolioItem.fromJson(Map<String, dynamic> json) {
-    return PortofolioItem(
-      title: json['title'],
-      total: json['total'],
-      type: json['type'],
+  factory PortofolioItemModel.fromJson(Map<String, dynamic> json) {
+    return PortofolioItemModel(
+      title: json['title'] as String,
+      total: (json['total'] as num).toDouble(),
+      type: json['type'] as String,
+    );
+  }
+}
+
+class PortofolioModel extends PortofolioEntity {
+  const PortofolioModel({required super.totalSaldo, required super.items});
+
+  factory PortofolioModel.fromJson(Map<String, dynamic> json) {
+    return PortofolioModel(
+      totalSaldo: (json['total_saldo'] as num).toDouble(),
+      items:
+          (json['items'] as List)
+              .map(
+                (e) => PortofolioItemModel.fromJson(e as Map<String, dynamic>),
+              )
+              .toList(),
     );
   }
 }

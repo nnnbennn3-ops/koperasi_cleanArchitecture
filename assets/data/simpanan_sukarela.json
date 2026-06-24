@@ -1,37 +1,49 @@
 {
     "type": "sukarela",
-    "balance": 2000000,
-    "total_outgoing": 0,
-    "total_incoming": 600000,
+    "balance": 2500000,
+    "total_outgoing": 150000,
+    "total_incoming": 1200000,
     "transactions": [
         {
-            "title": "SHU",
-            "date": "2026-01-02T09:15:00",
-            "amount": 500000,
+            "title": "Setoran Dana",
+            "date": "2026-06-25T09:15:00",
+            "amount": 200000,
+            "is_credit": true
+        },
+        {
+            "title": "Penarikan Dana",
+            "date": "2026-06-02T09:15:00",
+            "amount": 150000,
+            "is_credit": false
+        },
+        {
+            "title": "Setoran Dana",
+            "date": "2026-05-25T09:15:00",
+            "amount": 200000,
+            "is_credit": true
+        },
+        {
+            "title": "Setoran Dana",
+            "date": "2026-04-25T09:15:00",
+            "amount": 200000,
+            "is_credit": true
+        },
+        {
+            "title": "Setoran Dana",
+            "date": "2026-03-25T09:15:00",
+            "amount": 200000,
             "is_credit": true
         },
         {
             "title": "Setoran Dana",
             "date": "2026-02-25T09:15:00",
-            "amount": 150000,
+            "amount": 200000,
             "is_credit": true
         },
         {
             "title": "Setoran Dana",
             "date": "2026-01-25T09:15:00",
-            "amount": 150000,
-            "is_credit": true
-        },
-        {
-            "title": "Setoran Dana",
-            "date": "2025-12-25T09:15:00",
-            "amount": 150000,
-            "is_credit": true
-        },
-        {
-            "title": "Setoran Dana",
-            "date": "2025-11-25T09:15:00",
-            "amount": 150000,
+            "amount": 200000,
             "is_credit": true
         }
     ]

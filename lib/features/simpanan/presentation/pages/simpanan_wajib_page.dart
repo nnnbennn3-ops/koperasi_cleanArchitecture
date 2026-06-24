@@ -44,6 +44,8 @@ class _SimpananWajibView extends StatelessWidget {
       '${d.day.toString().padLeft(2, '0')} ${_months[d.month]} ${d.year}, '
       '${d.hour.toString().padLeft(2, '0')}.${d.minute.toString().padLeft(2, '0')}';
 
+  String _monthLabel(DateTime d) => '${_months[d.month]} ${d.year}';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +54,7 @@ class _SimpananWajibView extends StatelessWidget {
         builder: (context, state) {
           return CustomScrollView(
             slivers: [
-              // ── APP BAR ──────────────────────────────────────────
+              //--------- APP BAR -------------------
               SliverAppBar(
                 backgroundColor: const Color(0xFFF5F6FA),
                 foregroundColor: Colors.black87,
@@ -66,7 +68,6 @@ class _SimpananWajibView extends StatelessWidget {
                   ),
                 ),
               ),
-
               if (state is SimpananLoading)
                 const SliverFillRemaining(
                   child: Center(child: CircularProgressIndicator()),
@@ -81,22 +82,18 @@ class _SimpananWajibView extends StatelessWidget {
                   ),
                 )
               else if (state is SimpananLoaded) ...[
-                // ── SALDO AREA (lavender bg) ─────────────────────
+                //----------------- SALDO AREA ----------------------
                 SliverToBoxAdapter(
                   child: Stack(
                     clipBehavior: Clip.none,
                     children: [
-                      // Lavender background strip
                       Container(height: 120, color: const Color(0xFFEEF0FB)),
-
-                      // White card + overlapping icon
                       Positioned(
                         left: 40,
                         right: 40,
                         top: 20,
                         child: Column(
                           children: [
-                            // Icon overlapping top
                             Container(
                               width: 64,
                               height: 64,
@@ -110,7 +107,6 @@ class _SimpananWajibView extends StatelessWidget {
                                 size: 30,
                               ),
                             ),
-                            // White saldo card
                             Container(
                               width: double.infinity,
                               padding: const EdgeInsets.fromLTRB(
@@ -147,13 +143,9 @@ class _SimpananWajibView extends StatelessWidget {
                     ],
                   ),
                 ),
+                const SliverToBoxAdapter(child: SizedBox(height: 82)),
 
-                // Spacing to push history below card
-                SliverToBoxAdapter(
-                  child: SizedBox(height: _cardHeight(state.simpanan.balance)),
-                ),
-
-                // ── HISTORY SECTION ───────────────────────────────
+                // ------------------- HISTORY SECTION ----------------------
                 SliverToBoxAdapter(
                   child: Container(
                     decoration: const BoxDecoration(
@@ -166,8 +158,6 @@ class _SimpananWajibView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 20),
-
-                        // History header
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: Text(
@@ -179,17 +169,20 @@ class _SimpananWajibView extends StatelessWidget {
                             ),
                           ),
                         ),
-
                         const SizedBox(height: 12),
-
-                        // Month + outgoing/incoming row
+                        //Outgoing/Incoming dari data
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
+                              //Ambil bulan dari transaksi terbaru
                               Text(
-                                'Jun 2025',
+                                state.simpanan.transactions.isNotEmpty
+                                    ? _monthLabel(
+                                      state.simpanan.transactions.first.date,
+                                    )
+                                    : '',
                                 style: GoogleFonts.beVietnamPro(
                                   fontSize: 13,
                                   color: Colors.black54,
@@ -199,7 +192,7 @@ class _SimpananWajibView extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Text(
-                                    'Outgoing:  ${state.simpanan.totalOutgoing.toRupiah()}',
+                                    'Outgoing: ${state.simpanan.totalOutgoing.toRupiah()}',
                                     style: GoogleFonts.beVietnamPro(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
@@ -217,14 +210,12 @@ class _SimpananWajibView extends StatelessWidget {
                             ],
                           ),
                         ),
-
                         const SizedBox(height: 8),
                       ],
                     ),
                   ),
                 ),
 
-                // Transaction items
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (_, i) => Container(
@@ -244,12 +235,6 @@ class _SimpananWajibView extends StatelessWidget {
     );
   }
 
-  /// Extra height needed after the stack so history starts below the card
-  double _cardHeight(double balance) {
-    // icon 64 + card ~90 + gap 24 - lavender strip 120
-    return 64 + 90 + 24 - 120 + 24;
-  }
-
   Widget _historyItem(SimpananTransactionEntity trx) {
     final isCredit = trx.isCredit;
     return Column(
@@ -265,7 +250,7 @@ class _SimpananWajibView extends StatelessWidget {
                   isCredit
                       ? Icons.arrow_downward_rounded
                       : Icons.arrow_upward_rounded,
-                  color: const Color(0xFF0D1461),
+                  color: _kNavy,
                   size: 20,
                 ),
               ),
