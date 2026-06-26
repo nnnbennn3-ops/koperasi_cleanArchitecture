@@ -35,3 +35,4 @@ flutter:
     - assets/profil.jpg
     - assets/data/simpanan_wajib.json
     - assets/data/simpanan_sukarela.json
+    - assets/data/profile.json

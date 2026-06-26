@@ -1,17 +1,27 @@
+import 'package:equatable/equatable.dart';
 import '../../domain/entities/form.dart';
 
-abstract class FormStatus {}
-
-class FormInitial extends FormStatus {}
-
-class FormLoading extends FormStatus {}
-
-class FormLoaded extends FormStatus {
-  final List<FormItem> forms;
-  FormLoaded(this.forms);
+abstract class FormulirState extends Equatable {
+  @override
+  List<Object?> get props => [];
 }
 
-class FormError extends FormStatus {
+class FormulirInitial extends FormulirState {}
+
+class FormulirLoading extends FormulirState {}
+
+class FormulirLoaded extends FormulirState {
+  final List<FormItem> forms;
+  FormulirLoaded(this.forms);
+
+  @override
+  List<Object?> get props => [forms];
+}
+
+class FormulirError extends FormulirState {
   final String message;
-  FormError(this.message);
+  FormulirError(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }

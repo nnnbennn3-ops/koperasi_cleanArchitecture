@@ -1,6 +1,7 @@
 import '../../domain/entities/user_profile.dart';
 import '../../domain/repositories/settings_repository.dart';
 import '../datasources/settings_local_datasource.dart';
+import '../model/user_model.dart';
 
 class SettingsRepositoryImpl implements SettingsRepository {
   final SettingsLocalDataSource dataSource;
@@ -10,12 +11,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
   @override
   Future<UserProfile> getProfile() async {
     final data = await dataSource.getProfile();
-    return UserProfile(
-      name: data['name'],
-      memberId: data['memberId'],
-      bankName: data['bankName'],
-      accountNumber: data['accountNumber'],
-    );
+    return UserProfileModel.fromJson(data);
   }
 
   @override
@@ -24,7 +20,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
     required String account,
     required String name,
   }) async {
-    await dataSource.updateBank();
+    await dataSource.updateBank(bank: bank, account: account, name: name);
   }
 
   @override
@@ -32,6 +28,9 @@ class SettingsRepositoryImpl implements SettingsRepository {
     required String oldPassword,
     required String newPassword,
   }) async {
-    await dataSource.changePassword();
+    await dataSource.changePassword(
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+    );
   }
 }

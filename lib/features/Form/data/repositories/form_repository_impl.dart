@@ -8,11 +8,7 @@ class FormRepositoryImpl implements FormRepository {
   FormRepositoryImpl(this.dataSource);
 
   @override
-  Future<List<FormItem>> getForms() async {
-    final result = await dataSource.getForms();
-
-    return result
-        .map((e) => FormItem(title: e['title'], updatedAt: e['updatedAt']))
-        .toList();
+  Future<List<FormItem>> getForms() {
+    return dataSource.getForms();
   }
 }

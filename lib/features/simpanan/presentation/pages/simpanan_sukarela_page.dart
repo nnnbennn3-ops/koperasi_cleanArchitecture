@@ -49,187 +49,211 @@ class _SimpananSukarelaView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F6FA),
+      backgroundColor: const Color(0xFFEEF0FB),
       body: BlocBuilder<SimpananCubit, SimpananState>(
         builder: (context, state) {
-          return CustomScrollView(
-            slivers: [
-              // ── APP BAR ────────────────────────────────────────
-              SliverAppBar(
-                backgroundColor: const Color(0xFFF5F6FA),
-                foregroundColor: Colors.black87,
-                elevation: 0,
-                floating: true,
-                title: Text(
-                  'Simpanan Sukarela',
-                  style: GoogleFonts.beVietnamPro(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                  ),
-                ),
+          if (state is SimpananLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state is SimpananError) {
+            return Center(
+              child: Text(
+                state.message,
+                style: const TextStyle(color: Colors.red),
               ),
-
-              if (state is SimpananLoading)
-                const SliverFillRemaining(
-                  child: Center(child: CircularProgressIndicator()),
-                )
-              else if (state is SimpananError)
-                SliverFillRemaining(
-                  child: Center(
-                    child: Text(
-                      state.message,
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                  ),
-                )
-              else if (state is SimpananLoaded) ...[
-                // ── SALDO AREA ──────────────────────────────────
-                SliverToBoxAdapter(
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Container(height: 120, color: const Color(0xFFEEF0FB)),
-                      Positioned(
-                        left: 40,
-                        right: 40,
-                        top: 20,
-                        child: Column(
+            );
+          }
+          if (state is SimpananLoaded) {
+            return Stack(
+              children: [
+                // ── FIXED AREA ──────────────────────────────────
+                Column(
+                  children: [
+                    SafeArea(
+                      bottom: false,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 4,
+                        ),
+                        child: Row(
                           children: [
-                            Container(
-                              width: 64,
-                              height: 64,
-                              decoration: BoxDecoration(
-                                color: _kNavy,
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: const Icon(
-                                Icons.account_balance_wallet,
-                                color: Colors.white,
-                                size: 30,
-                              ),
-                            ),
-                            Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.fromLTRB(
-                                24,
-                                20,
-                                24,
-                                24,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(20),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.06),
-                                    blurRadius: 12,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: Center(
-                                child: Text(
-                                  state.simpanan.balance.toRupiah(),
-                                  style: GoogleFonts.beVietnamPro(
-                                    fontSize: 28,
-                                    fontWeight: FontWeight.w800,
-                                    color: _kNavy,
-                                  ),
-                                ),
+                            BackButton(color: Colors.black87),
+                            Text(
+                              'Simpanan Sukarela',
+                              style: GoogleFonts.beVietnamPro(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                                color: Colors.black87,
                               ),
                             ),
                           ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-
-                const SliverToBoxAdapter(child: SizedBox(height: 82)),
-
-                // ── HISTORY SECTION ─────────────────────────────
-                SliverToBoxAdapter(
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(28),
-                      ),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 20),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Text(
-                            'History',
-                            style: GoogleFonts.beVietnamPro(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.black87,
+
+                    const SizedBox(height: 60),
+
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 64,
+                            height: 64,
+                            decoration: BoxDecoration(
+                              color: _kNavy,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: const Icon(
+                              Icons.account_balance_wallet,
+                              color: Colors.white,
+                              size: 30,
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 12),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                state.simpanan.transactions.isNotEmpty
-                                    ? _monthLabel(
-                                      state.simpanan.transactions.first.date,
-                                    )
-                                    : '',
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.06),
+                                  blurRadius: 12,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Text(
+                                state.simpanan.balance.toRupiah(),
                                 style: GoogleFonts.beVietnamPro(
-                                  fontSize: 13,
-                                  color: Colors.black54,
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w800,
+                                  color: _kNavy,
                                 ),
                               ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+
+                // ── DRAGGABLE HISTORY ────────────────────────────
+                DraggableScrollableSheet(
+                  initialChildSize: 0.52,
+                  minChildSize: 0.52,
+                  maxChildSize: 1.0,
+                  builder: (_, scrollController) {
+                    return Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(28),
+                        ),
+                      ),
+                      child: CustomScrollView(
+                        controller: scrollController,
+                        slivers: [
+                          SliverToBoxAdapter(
+                            child: Center(
+                              child: Container(
+                                margin: const EdgeInsets.only(
+                                  top: 12,
+                                  bottom: 8,
+                                ),
+                                width: 40,
+                                height: 4,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade300,
+                                  borderRadius: BorderRadius.circular(2),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          SliverToBoxAdapter(
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Outgoing:  ${state.simpanan.totalOutgoing.toRupiah()}',
+                                    'History',
                                     style: GoogleFonts.beVietnamPro(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.black87,
                                     ),
                                   ),
-                                  Text(
-                                    'Incoming:  ${state.simpanan.totalIncoming.toRupiah()}',
-                                    style: GoogleFonts.beVietnamPro(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                  const SizedBox(height: 8),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        state.simpanan.transactions.isNotEmpty
+                                            ? _monthLabel(
+                                              state
+                                                  .simpanan
+                                                  .transactions
+                                                  .first
+                                                  .date,
+                                            )
+                                            : '',
+                                        style: GoogleFonts.beVietnamPro(
+                                          fontSize: 13,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            'Outgoing:  ${state.simpanan.totalOutgoing.toRupiah()}',
+                                            style: GoogleFonts.beVietnamPro(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Incoming:  ${state.simpanan.totalIncoming.toRupiah()}',
+                                            style: GoogleFonts.beVietnamPro(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                      ],
-                    ),
-                  ),
-                ),
 
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (_, i) => Container(
-                      color: Colors.white,
-                      child: _historyItem(state.simpanan.transactions[i]),
-                    ),
-                    childCount: state.simpanan.transactions.length,
-                  ),
-                ),
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (_, i) =>
+                                  _historyItem(state.simpanan.transactions[i]),
+                              childCount: state.simpanan.transactions.length,
+                            ),
+                          ),
 
-                const SliverToBoxAdapter(child: SizedBox(height: 32)),
+                          const SliverToBoxAdapter(child: SizedBox(height: 32)),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ],
-            ],
-          );
+            );
+          }
+          return const SizedBox();
         },
       ),
     );

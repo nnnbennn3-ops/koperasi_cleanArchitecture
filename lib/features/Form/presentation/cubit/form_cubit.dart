@@ -2,18 +2,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/usecases/get_forms.dart';
 import 'form_state.dart';
 
-class FormCubit extends Cubit<FormStatus> {
+class FormCubit extends Cubit<FormulirState> {
   final GetForms getForms;
 
-  FormCubit(this.getForms) : super(FormInitial());
+  FormCubit(this.getForms) : super(FormulirInitial());
 
-  void fetchForms() async {
+  Future<void> fetchForms() async {
     try {
-      emit(FormLoading());
-      final data = await getForms();
-      emit(FormLoaded(data));
+      emit(FormulirLoading());
+      final forms = await getForms();
+      emit(FormulirLoaded(forms));
     } catch (e) {
-      emit(FormError(e.toString()));
+      emit(FormulirError(e.toString()));
     }
   }
 }

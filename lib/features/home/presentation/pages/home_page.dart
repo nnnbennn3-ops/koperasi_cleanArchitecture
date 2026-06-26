@@ -219,7 +219,7 @@ class _HomePageState extends State<HomePage> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Color.fromARGB(255, 25, 107, 207),
+            Color.fromARGB(255, 38, 5, 146),
             Color.fromARGB(255, 55, 97, 210),
             Color.fromARGB(255, 195, 193, 206),
           ],
@@ -264,50 +264,73 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           const SizedBox(height: 20),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: const Color(0xFF0D1461),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.white.withOpacity(0.1)),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Total Saldo',
-                  style: GoogleFonts.beVietnamPro(
-                    color: Colors.white70,
-                    fontSize: 13,
+          Column(
+            children: [
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF0D1461),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
                   ),
+                  border: Border.all(color: Colors.white.withOpacity(0.1)),
                 ),
-                const SizedBox(height: 6),
-                Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      _isHidden ? 'Rp ••••••••' : home.total.toRupiah(),
+                      'Total Saldo',
                       style: GoogleFonts.beVietnamPro(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Colors.white70,
+                        fontSize: 13,
                       ),
                     ),
-                    const SizedBox(width: 10),
-                    GestureDetector(
-                      onTap: () => setState(() => _isHidden = !_isHidden),
-                      child: Icon(
-                        _isHidden ? Icons.visibility_off : Icons.visibility,
-                        color: Colors.white54,
-                        size: 20,
-                      ),
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        Text(
+                          _isHidden ? 'Rp ••••••••' : home.total.toRupiah(),
+                          style: GoogleFonts.beVietnamPro(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        GestureDetector(
+                          onTap: () => setState(() => _isHidden = !_isHidden),
+                          child: Icon(
+                            _isHidden ? Icons.visibility_off : Icons.visibility,
+                            color: Colors.white54,
+                            size: 20,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
-                const Divider(color: Colors.white24, height: 1),
-                const SizedBox(height: 16),
-                Row(
+              ),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 16,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 98, 102, 158),
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
+                  ),
+                  border: Border(
+                    left: BorderSide(color: Colors.white.withOpacity(0.1)),
+                    right: BorderSide(color: Colors.white.withOpacity(0.1)),
+                    bottom: BorderSide(color: Colors.white.withOpacity(0.1)),
+                  ),
+                ),
+                child: Row(
                   children: [
                     Expanded(
                       child: _saldoItem(
@@ -315,7 +338,6 @@ class _HomePageState extends State<HomePage> {
                         value: _isHidden ? 'Rp ••••••' : home.wajib.toRupiah(),
                       ),
                     ),
-                    Container(width: 1, height: 36, color: Colors.white24),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.only(left: 16),
@@ -323,15 +345,15 @@ class _HomePageState extends State<HomePage> {
                           label: 'Simpanan Sukarela',
                           value:
                               _isHidden
-                                  ? 'Rp ••••••'
+                                  ? 'Rp  ••••••'
                                   : home.sukarela.toRupiah(),
                         ),
                       ),
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),

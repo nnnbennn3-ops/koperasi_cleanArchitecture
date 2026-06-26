@@ -1,24 +1,20 @@
-import 'package:clean_architecture/features/Settings/data/datasources/settings_local_datasource.dart';
-import 'package:clean_architecture/features/Settings/data/repositories/settings_repository_impl.dart';
 import 'package:flutter/material.dart';
-
-import '../../features/home/presentation/pages/home_page.dart';
-import 'package:clean_architecture/injection_container.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:clean_architecture/features/form/data/datasources/form_local_datasource.dart';
-import 'package:clean_architecture/features/form/data/repositories/form_repository_impl.dart';
-import 'package:clean_architecture/features/form/domain/usecases/get_forms.dart';
+import 'package:clean_architecture/injection_container.dart';
+
+import 'package:clean_architecture/features/home/presentation/cubit/home_cubit.dart';
+import 'package:clean_architecture/features/home/presentation/pages/home_page.dart';
+
+import 'package:clean_architecture/features/portofolio/presentation/cubit/portofolio_cubit.dart';
+import 'package:clean_architecture/features/portofolio/presentation/cubit/portofolio_state.dart';
+import 'package:clean_architecture/features/portofolio/presentation/pages/portofolio_page.dart';
+
 import 'package:clean_architecture/features/form/presentation/cubit/form_cubit.dart';
 import 'package:clean_architecture/features/form/presentation/pages/form_page.dart';
 
-import 'package:clean_architecture/features/Settings/domain/usecases/get_profile.dart';
 import 'package:clean_architecture/features/Settings/presentation/cubit/settings_cubit.dart';
 import 'package:clean_architecture/features/Settings/presentation/pages/settings_page.dart';
-
-import 'package:clean_architecture/features/portofolio/presentation/cubit/portofolio_state.dart';
-import 'features/portofolio/presentation/pages/portofolio_page.dart';
-import 'package:clean_architecture/features/portofolio/presentation/cubit/portofolio_cubit.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -29,48 +25,6 @@ class MainNavigation extends StatefulWidget {
 
 class _MainNavigationState extends State<MainNavigation> {
   int _currentIndex = 0;
-
-  final List<Widget> _pages = [
-    const HomePage(),
-    BlocProvider(
-      create: (_) => sl<PortofolioCubit>()..fetch(),
-      child: BlocBuilder<PortofolioCubit, PortofolioState>(
-        builder: (context, state) {
-          if (state is PortofolioLoading || state is PortofolioInitial) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state is PortofolioLoaded) {
-            return PortfolioPage(
-              items: state.portofolio.items,
-              totalSaldo: state.portofolio.totalSaldo,
-            );
-          }
-          if (state is PortofolioError) {
-            return Center(child: Text(state.message));
-          }
-          return const SizedBox();
-        },
-      ),
-    ),
-    BlocProvider(
-      create: (_) {
-        final dataSource = FormLocalDataSource();
-        final repo = FormRepositoryImpl(dataSource);
-        final usecase = GetForms(repo);
-        return FormCubit(usecase)..fetchForms();
-      },
-      child: const FormPage(),
-    ),
-    BlocProvider(
-      create: (_) {
-        final dataSource = SettingsLocalDataSource();
-        final repo = SettingsRepositoryImpl(dataSource);
-        final usecase = GetProfile(repo);
-        return SettingsCubit(usecase)..fetchProfile();
-      },
-      child: const SettingsPage(),
-    ),
-  ];
 
   static const _kNavy = Color(0xFF0D1461);
 
@@ -100,7 +54,18 @@ class _MainNavigationState extends State<MainNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: _currentIndex, children: _pages),
+      body: IndexedStack(
+        index: _currentIndex,
+        children: const [
+          // Tiap tab wrapped _KeepAlivePage supaya cubit tidak recreate
+          // saat ganti tab, tapi tetap fresh saat MainNavigation recreate
+          // (setelah logout → login)
+          _KeepAlivePage(child: _HomeTab()),
+          _KeepAlivePage(child: _PortofolioTab()),
+          _KeepAlivePage(child: _FormTab()),
+          _KeepAlivePage(child: _SettingsTab()),
+        ],
+      ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -127,7 +92,6 @@ class _MainNavigationState extends State<MainNavigation> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // Pill background hanya untuk item aktif
                         AnimatedContainer(
                           duration: const Duration(milliseconds: 200),
                           curve: Curves.easeInOut,
@@ -167,6 +131,93 @@ class _MainNavigationState extends State<MainNavigation> {
           ),
         ),
       ),
+    );
+  }
+}
+
+// Supaya state tiap tab tidak di-dispose saat ganti tab
+class _KeepAlivePage extends StatefulWidget {
+  final Widget child;
+  const _KeepAlivePage({required this.child});
+
+  @override
+  State<_KeepAlivePage> createState() => _KeepAlivePageState();
+}
+
+class _KeepAlivePageState extends State<_KeepAlivePage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return widget.child;
+  }
+}
+
+// Tiap tab punya BlocProvider sendiri — fresh saat MainNavigation recreate
+
+class _HomeTab extends StatelessWidget {
+  const _HomeTab();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => sl<HomeCubit>()..fetchInitial(),
+      child: const HomePage(),
+    );
+  }
+}
+
+class _PortofolioTab extends StatelessWidget {
+  const _PortofolioTab();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => sl<PortofolioCubit>()..fetch(),
+      child: BlocBuilder<PortofolioCubit, PortofolioState>(
+        builder: (context, state) {
+          if (state is PortofolioLoading || state is PortofolioInitial) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state is PortofolioLoaded) {
+            return PortfolioPage(
+              items: state.portofolio.items,
+              totalSaldo: state.portofolio.totalSaldo,
+            );
+          }
+          if (state is PortofolioError) {
+            return Center(child: Text(state.message));
+          }
+          return const SizedBox();
+        },
+      ),
+    );
+  }
+}
+
+class _FormTab extends StatelessWidget {
+  const _FormTab();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => sl<FormCubit>()..fetchForms(),
+      child: const FormPage(),
+    );
+  }
+}
+
+class _SettingsTab extends StatelessWidget {
+  const _SettingsTab();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => sl<SettingsCubit>()..fetchProfile(),
+      child: const SettingsPage(),
     );
   }
 }
