@@ -1,3 +1,1 @@
-# clean_architecture
-
-A new Flutter project.
+Aplikasi Mobile Koperasi Karyawan
