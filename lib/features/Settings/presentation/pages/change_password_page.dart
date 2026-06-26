@@ -50,99 +50,101 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         foregroundColor: Colors.black87,
         elevation: 0,
       ),
-      body: BlocListener<SettingsCubit, SettingsState>(
-        listener: (context, state) {
-          if (state is SettingsUpdateSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.green.shade700,
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-            Navigator.pop(context);
-          }
-          if (state is SettingsError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.red.shade700,
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-          }
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              // ------------- Password Lama -----------------------
-              _buildPasswordField(
-                label: 'Password Lama',
-                controller: _oldPassController,
-                obscure: _obscureOld,
-                onToggle: () => setState(() => _obscureOld = !_obscureOld),
-              ),
-              const SizedBox(height: 16),
+      body: SafeArea(
+        child: BlocListener<SettingsCubit, SettingsState>(
+          listener: (context, state) {
+            if (state is SettingsUpdateSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.green.shade700,
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+              Navigator.pop(context);
+            }
+            if (state is SettingsError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.red.shade700,
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                // ------------- Password Lama -----------------------
+                _buildPasswordField(
+                  label: 'Password Lama',
+                  controller: _oldPassController,
+                  obscure: _obscureOld,
+                  onToggle: () => setState(() => _obscureOld = !_obscureOld),
+                ),
+                const SizedBox(height: 16),
 
-              // ------------------ Password Baru -----------------------
-              _buildPasswordField(
-                label: 'Password Baru',
-                controller: _newPassController,
-                obscure: _obscureNew,
-                onToggle: () => setState(() => _obscureNew = !_obscureNew),
-              ),
-              const SizedBox(height: 16),
+                // ------------------ Password Baru -----------------------
+                _buildPasswordField(
+                  label: 'Password Baru',
+                  controller: _newPassController,
+                  obscure: _obscureNew,
+                  onToggle: () => setState(() => _obscureNew = !_obscureNew),
+                ),
+                const SizedBox(height: 16),
 
-              // ------------- Konfirmasi Password Baru --------------------
-              _buildPasswordField(
-                label: 'Konfirmasi Password Baru',
-                controller: _confirmPassController,
-                obscure: _obscureConfirm,
-                onToggle:
-                    () => setState(() => _obscureConfirm = !_obscureConfirm),
-              ),
+                // ------------- Konfirmasi Password Baru --------------------
+                _buildPasswordField(
+                  label: 'Konfirmasi Password Baru',
+                  controller: _confirmPassController,
+                  obscure: _obscureConfirm,
+                  onToggle:
+                      () => setState(() => _obscureConfirm = !_obscureConfirm),
+                ),
 
-              const Spacer(),
+                const Spacer(),
 
-              // ------------- Tombol Ganti Password ----------------------
-              BlocBuilder<SettingsCubit, SettingsState>(
-                builder: (context, state) {
-                  final isLoading = state is SettingsUpdateLoading;
-                  return SizedBox(
-                    width: double.infinity,
-                    height: 52,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0B1E8A),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(28),
+                // ------------- Tombol Ganti Password ----------------------
+                BlocBuilder<SettingsCubit, SettingsState>(
+                  builder: (context, state) {
+                    final isLoading = state is SettingsUpdateLoading;
+                    return SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF0B1E8A),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(28),
+                          ),
                         ),
+                        onPressed: isLoading ? null : _onSubmit,
+                        child:
+                            isLoading
+                                ? const SizedBox(
+                                  width: 22,
+                                  height: 22,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                                : Text(
+                                  'Ganti Password',
+                                  style: GoogleFonts.beVietnamPro(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
                       ),
-                      onPressed: isLoading ? null : _onSubmit,
-                      child:
-                          isLoading
-                              ? const SizedBox(
-                                width: 22,
-                                height: 22,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 2,
-                                ),
-                              )
-                              : Text(
-                                'Ganti Password',
-                                style: GoogleFonts.beVietnamPro(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                              ),
-                    ),
-                  );
-                },
-              ),
-            ],
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

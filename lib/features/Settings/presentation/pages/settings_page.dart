@@ -61,7 +61,7 @@ class _SettingsView extends StatelessWidget {
               children: [
                 const SizedBox(height: 20),
 
-                // ---------------------- Profil --------------------------
+                // ── Profil ──────────────────────────────────────────
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
@@ -118,7 +118,7 @@ class _SettingsView extends StatelessWidget {
                 const SizedBox(height: 20),
                 const Divider(height: 1),
 
-                // ----------------- Menu Items ------------------------------
+                // ── Menu items ───────────────────────────────────────
                 _menuItem(
                   context,
                   icon: Icons.account_balance,
@@ -139,16 +139,12 @@ class _SettingsView extends StatelessWidget {
                 _menuItem(
                   context,
                   icon: Icons.lock_outline,
-                  label: 'Ganti password',
+                  label: 'Ganti Password',
                   onTap:
                       () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder:
-                              (_) => BlocProvider.value(
-                                value: context.read<SettingsCubit>(),
-                                child: const ChangePasswordPage(),
-                              ),
+                          builder: (_) => const ChangePasswordPage(),
                         ),
                       ),
                 ),

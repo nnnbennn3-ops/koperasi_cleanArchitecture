@@ -111,6 +111,7 @@ class _SimpananSukarelaView extends StatelessWidget {
                               size: 30,
                             ),
                           ),
+                          const SizedBox(height: 20),
                           Container(
                             width: double.infinity,
                             padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),

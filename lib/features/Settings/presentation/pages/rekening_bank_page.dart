@@ -74,117 +74,121 @@ class _RekeningBankPageState extends State<RekeningBankPage> {
         foregroundColor: Colors.black87,
         elevation: 0,
       ),
-      body: BlocListener<SettingsCubit, SettingsState>(
-        listener: (context, state) {
-          if (state is SettingsUpdateSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.green.shade700,
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-            Navigator.pop(context);
-          }
-          if (state is SettingsError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.red.shade700,
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-          }
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              // -------------- Nama Bank (Dropdown) -------------------
-              _buildLabel('Nama Bank'),
-              const SizedBox(height: 6),
-              DropdownButtonFormField<String>(
-                value:
-                    _bankOptions.contains(_bankController.text)
-                        ? _bankController.text
-                        : _bankOptions.first,
-                decoration: _inputDecoration(),
-                items:
-                    _bankOptions
-                        .map((b) => DropdownMenuItem(value: b, child: Text(b)))
-                        .toList(),
-                onChanged: (val) {
-                  if (val != null) _bankController.text = val;
-                },
-                style: GoogleFonts.beVietnamPro(
-                  fontSize: 14,
-                  color: Colors.black87,
+      body: SafeArea(
+        child: BlocListener<SettingsCubit, SettingsState>(
+          listener: (context, state) {
+            if (state is SettingsUpdateSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.green.shade700,
+                  behavior: SnackBarBehavior.floating,
                 ),
-              ),
+              );
+              Navigator.pop(context);
+            }
+            if (state is SettingsError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.red.shade700,
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                // ----------------- Nama Bank ----------------------
+                _buildLabel('Nama Bank'),
+                const SizedBox(height: 6),
+                DropdownButtonFormField<String>(
+                  value:
+                      _bankOptions.contains(_bankController.text)
+                          ? _bankController.text
+                          : _bankOptions.first,
+                  decoration: _inputDecoration(),
+                  items:
+                      _bankOptions
+                          .map(
+                            (b) => DropdownMenuItem(value: b, child: Text(b)),
+                          )
+                          .toList(),
+                  onChanged: (val) {
+                    if (val != null) _bankController.text = val;
+                  },
+                  style: GoogleFonts.beVietnamPro(
+                    fontSize: 14,
+                    color: Colors.black87,
+                  ),
+                ),
 
-              const SizedBox(height: 16),
+                const SizedBox(height: 16),
 
-              // ------------------ Nomor Rekening -------------------------
-              _buildLabel('Nomor Rekening'),
-              const SizedBox(height: 6),
-              TextField(
-                controller: _rekeningController,
-                keyboardType: TextInputType.number,
-                style: GoogleFonts.beVietnamPro(fontSize: 14),
-                decoration: _inputDecoration(),
-              ),
+                // ----------------- Nomor Rekening -----------------------
+                _buildLabel('Nomor Rekening'),
+                const SizedBox(height: 6),
+                TextField(
+                  controller: _rekeningController,
+                  keyboardType: TextInputType.number,
+                  style: GoogleFonts.beVietnamPro(fontSize: 14),
+                  decoration: _inputDecoration(),
+                ),
 
-              const SizedBox(height: 16),
+                const SizedBox(height: 16),
 
-              // ------------------ Nama Lengkap ----------------------
-              _buildLabel('Nama Lengkap'),
-              const SizedBox(height: 6),
-              TextField(
-                controller: _namaController,
-                style: GoogleFonts.beVietnamPro(fontSize: 14),
-                decoration: _inputDecoration(),
-              ),
+                // -------------------- Nama Lengkap -----------------------
+                _buildLabel('Nama Lengkap'),
+                const SizedBox(height: 6),
+                TextField(
+                  controller: _namaController,
+                  style: GoogleFonts.beVietnamPro(fontSize: 14),
+                  decoration: _inputDecoration(),
+                ),
 
-              const Spacer(),
+                const Spacer(),
 
-              // --------- Tombol Simpan -------------------------
-              BlocBuilder<SettingsCubit, SettingsState>(
-                builder: (context, state) {
-                  final isLoading = state is SettingsUpdateLoading;
-                  return SizedBox(
-                    width: double.infinity,
-                    height: 52,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0B1E8A),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(28),
+                // -------------------- Tombol Simpanan ---------------------
+                BlocBuilder<SettingsCubit, SettingsState>(
+                  builder: (context, state) {
+                    final isLoading = state is SettingsUpdateLoading;
+                    return SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF0B1E8A),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(28),
+                          ),
                         ),
+                        onPressed: isLoading ? null : _onSave,
+                        child:
+                            isLoading
+                                ? const SizedBox(
+                                  width: 22,
+                                  height: 22,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                                : Text(
+                                  'Simpan',
+                                  style: GoogleFonts.beVietnamPro(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
                       ),
-                      onPressed: isLoading ? null : _onSave,
-                      child:
-                          isLoading
-                              ? const SizedBox(
-                                width: 22,
-                                height: 22,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 2,
-                                ),
-                              )
-                              : Text(
-                                'Simpan',
-                                style: GoogleFonts.beVietnamPro(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                              ),
-                    ),
-                  );
-                },
-              ),
-            ],
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
