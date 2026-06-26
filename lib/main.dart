@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'features/Auth/presentation/cubit/auth_cubit.dart';
-import 'features/home/presentation/cubit/home_cubit.dart';
+//import 'features/home/presentation/cubit/home_cubit.dart';
 import 'features/Auth/presentation/pages/auth_page.dart';
-import 'features/Settings/presentation/cubit/settings_cubit.dart';
+//import 'features/Settings/presentation/cubit/settings_cubit.dart';
 
 import 'injection_container.dart';
 
@@ -22,8 +22,8 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => sl<AuthCubit>()),
-        BlocProvider(create: (_) => sl<HomeCubit>()),
-        BlocProvider(create: (_) => sl<SettingsCubit>()),
+        // BlocProvider(create: (_) => sl<HomeCubit>()),
+        // BlocProvider(create: (_) => sl<SettingsCubit>()),
       ],
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
