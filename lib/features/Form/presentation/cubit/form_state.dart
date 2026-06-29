@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../domain/entities/form.dart';
+import '../../domain/entities/form_entity.dart';
 
 abstract class FormulirState extends Equatable {
   @override

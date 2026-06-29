@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../cubit/form_cubit.dart';
 import '../cubit/form_state.dart';
-import '../../domain/entities/form.dart';
+import '../../domain/entities/form_entity.dart';
 
 class FormPage extends StatelessWidget {
   const FormPage({super.key});

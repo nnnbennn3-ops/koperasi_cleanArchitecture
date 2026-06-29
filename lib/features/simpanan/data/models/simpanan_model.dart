@@ -1,4 +1,4 @@
-import '../../domain/entities/simpanan.dart';
+import '../../domain/entities/simpanan_entity.dart';
 
 class SimpananTransactionModel extends SimpananTransactionEntity {
   const SimpananTransactionModel({

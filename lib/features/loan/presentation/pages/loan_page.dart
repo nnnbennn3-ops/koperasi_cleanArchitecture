@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/utils/currency_formatter.dart';
-import '../../domain/entities/installment.dart';
-import '../../domain/entities/loan.dart';
+import '../../domain/entities/installment_entity.dart';
+import '../../domain/entities/loan_entity.dart';
 import '../cubit/loan_cubit.dart';
 import '../cubit/loan_state.dart';
 import 'simulasi_pinjaman_page.dart';

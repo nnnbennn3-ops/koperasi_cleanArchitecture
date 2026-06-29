@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../domain/entities/simpanan.dart';
+import '../../domain/entities/simpanan_entity.dart';
 
 abstract class SimpananState extends Equatable {
   @override

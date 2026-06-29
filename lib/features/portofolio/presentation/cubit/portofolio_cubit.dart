@@ -1,16 +1,16 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain/usecases/get_portofolio.dart';
+import '../../domain/usecases/get_portofolio_usecase.dart';
 import 'portofolio_state.dart';
 
 class PortofolioCubit extends Cubit<PortofolioState> {
-  final GetPortofolio getPortofolio;
+  final PortofolioUsecase usecase;
 
-  PortofolioCubit(this.getPortofolio) : super(PortofolioInitial());
+  PortofolioCubit(this.usecase) : super(PortofolioInitial());
 
   Future<void> fetch() async {
     try {
       emit(PortofolioLoading());
-      final portofolio = await getPortofolio();
+      final portofolio = await usecase.getPortofolio();
       emit(PortofolioLoaded(portofolio));
     } catch (e) {
       emit(PortofolioError(e.toString()));

@@ -1,4 +1,4 @@
-import '../../domain/entities/installment.dart';
+import '../../domain/entities/installment_entity.dart';
 
 class InstallmentModel extends Installment {
   const InstallmentModel({

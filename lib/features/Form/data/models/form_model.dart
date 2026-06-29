@@ -1,4 +1,4 @@
-import '../../domain/entities/form.dart';
+import '../../domain/entities/form_entity.dart';
 
 class FormItemModel extends FormItem {
   const FormItemModel({required super.title, required super.updatedAt});

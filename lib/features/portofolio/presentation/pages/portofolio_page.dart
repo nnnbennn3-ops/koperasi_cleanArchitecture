@@ -5,7 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/utils/currency_formatter.dart';
-import '../../domain/entities/portofolio_item.dart';
+import '../../domain/entities/portofolio_item_entity.dart';
 import '../../../simpanan/presentation/pages/simpanan_wajib_page.dart';
 import '../../../simpanan/presentation/pages/simpanan_sukarela_page.dart';
 import 'package:clean_architecture/features/loan/presentation/cubit/loan_cubit.dart';

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
-
+import 'package:clean_architecture/core/widgets/app_input_widgets.dart';
 import '../cubit/settings_cubit.dart';
 import '../cubit/settings_state.dart';
 
@@ -42,10 +41,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     return Scaffold(
       backgroundColor: const Color(0xFFF4F5F7),
       appBar: AppBar(
-        title: Text(
-          'Change Password',
-          style: GoogleFonts.beVietnamPro(fontWeight: FontWeight.w600),
-        ),
+        title: const Text('Change Password'),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black87,
         elevation: 0,
@@ -77,8 +73,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                // ------------- Password Lama -----------------------
-                _buildPasswordField(
+                appPasswordField(
                   label: 'Password Lama',
                   controller: _oldPassController,
                   obscure: _obscureOld,
@@ -86,8 +81,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 ),
                 const SizedBox(height: 16),
 
-                // ------------------ Password Baru -----------------------
-                _buildPasswordField(
+                appPasswordField(
                   label: 'Password Baru',
                   controller: _newPassController,
                   obscure: _obscureNew,
@@ -95,8 +89,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 ),
                 const SizedBox(height: 16),
 
-                // ------------- Konfirmasi Password Baru --------------------
-                _buildPasswordField(
+                appPasswordField(
                   label: 'Konfirmasi Password Baru',
                   controller: _confirmPassController,
                   obscure: _obscureConfirm,
@@ -106,40 +99,12 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
                 const Spacer(),
 
-                // ------------- Tombol Ganti Password ----------------------
                 BlocBuilder<SettingsCubit, SettingsState>(
                   builder: (context, state) {
-                    final isLoading = state is SettingsUpdateLoading;
-                    return SizedBox(
-                      width: double.infinity,
-                      height: 52,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF0B1E8A),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(28),
-                          ),
-                        ),
-                        onPressed: isLoading ? null : _onSubmit,
-                        child:
-                            isLoading
-                                ? const SizedBox(
-                                  width: 22,
-                                  height: 22,
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                                : Text(
-                                  'Ganti Password',
-                                  style: GoogleFonts.beVietnamPro(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                      ),
+                    return appPrimaryButton(
+                      label: 'Ganti Password',
+                      onPressed: _onSubmit,
+                      isLoading: state is SettingsUpdateLoading,
                     );
                   },
                 ),
@@ -148,64 +113,6 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildPasswordField({
-    required String label,
-    required TextEditingController controller,
-    required bool obscure,
-    required VoidCallback onToggle,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: GoogleFonts.beVietnamPro(
-            fontSize: 13,
-            color: Colors.grey.shade700,
-          ),
-        ),
-        const SizedBox(height: 6),
-        TextField(
-          controller: controller,
-          obscureText: obscure,
-          style: GoogleFonts.beVietnamPro(fontSize: 14),
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.white,
-            prefixIcon: const Icon(Icons.key_outlined, size: 18),
-            suffixIcon: IconButton(
-              icon: Icon(
-                obscure ? Icons.visibility_off : Icons.visibility,
-                size: 18,
-                color: Colors.grey,
-              ),
-              onPressed: onToggle,
-            ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 14,
-              vertical: 14,
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: BorderSide(color: Colors.grey.shade300),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: BorderSide(color: Colors.grey.shade300),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(
-                color: Color(0xFF0B1E8A),
-                width: 1.5,
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

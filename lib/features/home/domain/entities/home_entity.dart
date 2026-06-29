@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'transaction.dart';
+import 'transaction_entity.dart';
 
 class HomeEntity extends Equatable {
   final String userName;

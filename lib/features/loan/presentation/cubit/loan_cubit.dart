@@ -1,16 +1,16 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain/usecases/get_loan.dart';
+import '../../domain/usecases/get_loan_usecase.dart';
 import 'loan_state.dart';
 
 class LoanCubit extends Cubit<LoanState> {
-  final GetLoan getLoan;
+  final LoanUsecase usecase;
 
-  LoanCubit(this.getLoan) : super(LoanInitial());
+  LoanCubit(this.usecase) : super(LoanInitial());
 
   Future<void> fetchLoan() async {
     try {
       emit(LoanLoading());
-      final loan = await getLoan();
+      final loan = await usecase.getLoan();
       emit(LoanLoaded(loan));
     } catch (e) {
       emit(LoanError(e.toString()));

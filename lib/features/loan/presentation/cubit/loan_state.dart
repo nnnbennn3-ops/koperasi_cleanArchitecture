@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../domain/entities/loan.dart';
+import '../../domain/entities/loan_entity.dart';
 
 abstract class LoanState extends Equatable {
   @override

@@ -1,4 +1,4 @@
-import '../../domain/entities/loan.dart';
+import '../../domain/entities/loan_entity.dart';
 import '../../domain/repositories/loan_repository.dart';
 import '../datasources/loan_local_datasource.dart';
 

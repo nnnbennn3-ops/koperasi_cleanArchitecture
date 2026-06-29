@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain/entities/transaction.dart';
-import '../../domain/usecases/get_home.dart';
+import '../../domain/entities/transaction_entity.dart';
+import '../../domain/usecases/get_home_usecase.dart';
 import 'home_state.dart';
 import 'package:flutter/widgets.dart';
 
@@ -21,7 +21,7 @@ class MonthGroup {
 }
 
 class HomeCubit extends Cubit<HomeState> {
-  final GetHome getHome;
+  final HomeUsecase usecase;
 
   static const pageSize = 10;
 
@@ -30,14 +30,14 @@ class HomeCubit extends Cubit<HomeState> {
   final Map<String, MonthGroup> _monthGroups = {};
   String currentMonth = '';
 
-  HomeCubit(this.getHome) : super(HomeInitial()) {
+  HomeCubit(this.usecase) : super(HomeInitial()) {
     fetchInitial();
   }
 
   Future<void> fetchInitial() async {
     try {
       emit(HomeLoading());
-      final home = await getHome(page: 1);
+      final home = await usecase.getHome(page: 1);
       emit(HomeLoaded(home));
     } catch (e) {
       emit(HomeError(e.toString()));
@@ -45,7 +45,7 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<List<TransactionEntity>> fetchPage(int pageKey) async {
-    final home = await getHome(page: pageKey);
+    final home = await usecase.getHome(page: pageKey);
     return home.transactions;
   }
 

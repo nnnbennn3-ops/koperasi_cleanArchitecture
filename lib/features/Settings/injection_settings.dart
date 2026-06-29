@@ -2,9 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'data/datasources/settings_local_datasource.dart';
 import 'data/repositories/settings_repository_impl.dart';
 import 'domain/repositories/settings_repository.dart';
-import 'domain/usecases/get_profile.dart';
-import 'domain/usecases/update_bank.dart';
-import 'domain/usecases/change_password.dart';
+import 'domain/usecases/settings_usecase.dart';
 import 'presentation/cubit/settings_cubit.dart';
 
 final sl = GetIt.instance;
@@ -21,16 +19,10 @@ void initSettingsInjection() {
   );
 
   //Usecases
-  sl.registerLazySingleton(() => GetProfile(sl<SettingsRepository>()));
-  sl.registerLazySingleton(() => UpdateBank(sl<SettingsRepository>()));
-  sl.registerLazySingleton(() => ChangePassword(sl<SettingsRepository>()));
+  sl.registerLazySingleton<SettingsUsecase>(
+    () => SettingsUsecase(repository: sl<SettingsRepository>()),
+  );
 
   //Cubit
-  sl.registerFactory<SettingsCubit>(
-    () => SettingsCubit(
-      getProfile: sl<GetProfile>(),
-      updateBank: sl<UpdateBank>(),
-      changePassword: sl<ChangePassword>(),
-    ),
-  );
+  sl.registerFactory<SettingsCubit>(() => SettingsCubit(sl<SettingsUsecase>()));
 }

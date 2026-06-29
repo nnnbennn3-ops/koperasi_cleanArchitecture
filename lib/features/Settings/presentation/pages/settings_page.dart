@@ -128,10 +128,13 @@ class _SettingsView extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder:
-                              (_) => RekeningBankPage(
-                                bankName: profile.bankName,
-                                accountNumber: profile.accountNumber,
-                                accountName: profile.name,
+                              (_) => BlocProvider.value(
+                                value: context.read<SettingsCubit>(),
+                                child: RekeningBankPage(
+                                  bankName: profile.bankName,
+                                  accountNumber: profile.accountNumber,
+                                  accountName: profile.name,
+                                ),
                               ),
                         ),
                       ),
@@ -144,7 +147,11 @@ class _SettingsView extends StatelessWidget {
                       () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => const ChangePasswordPage(),
+                          builder:
+                              (_) => BlocProvider.value(
+                                value: context.read<SettingsCubit>(),
+                                child: const ChangePasswordPage(),
+                              ),
                         ),
                       ),
                 ),

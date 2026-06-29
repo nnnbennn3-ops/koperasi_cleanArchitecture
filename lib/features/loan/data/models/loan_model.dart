@@ -1,4 +1,4 @@
-import '../../domain/entities/loan.dart';
+import '../../domain/entities/loan_entity.dart';
 import 'loan_summary_model.dart';
 import 'installment_model.dart';
 

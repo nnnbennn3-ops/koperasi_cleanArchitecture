@@ -1,4 +1,4 @@
-import '../../domain/entities/home.dart';
+import '../../domain/entities/home_entity.dart';
 import 'package:equatable/equatable.dart';
 import 'home_cubit.dart';
 

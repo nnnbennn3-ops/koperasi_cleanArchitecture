@@ -1,4 +1,4 @@
-import '../../domain/entities/portofolio.dart';
+import '../../domain/entities/portofolio_entity.dart';
 import '../../domain/repositories/portofolio_repository.dart';
 import '../datasource/portofolio_local_datasource.dart';
 

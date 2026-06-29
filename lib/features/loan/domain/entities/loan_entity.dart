@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'loan_summary.dart';
-import 'installment.dart';
+import 'loan_summary_entity.dart';
+import 'installment_entity.dart';
 
 class Loan extends Equatable {
   final String id;

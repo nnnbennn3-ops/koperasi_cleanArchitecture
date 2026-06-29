@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/utils/currency_formatter.dart';
-import '../../domain/entities/home.dart';
-import '../../domain/entities/transaction.dart';
+import '../../domain/entities/home_entity.dart';
+import '../../domain/entities/transaction_entity.dart';
 import '../cubit/home_cubit.dart';
 import '../cubit/home_state.dart';
 

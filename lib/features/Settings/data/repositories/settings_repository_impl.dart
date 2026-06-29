@@ -1,4 +1,4 @@
-import '../../domain/entities/user_profile.dart';
+import '../../domain/entities/user_profile_entity.dart';
 import '../../domain/repositories/settings_repository.dart';
 import '../datasources/settings_local_datasource.dart';
 import '../model/user_model.dart';

@@ -1,11 +1,24 @@
+import '../entities/user_profile_entity.dart';
 import '../repositories/settings_repository.dart';
 
-class ChangePassword {
+class SettingsUsecase {
   final SettingsRepository repository;
 
-  ChangePassword(this.repository);
+  SettingsUsecase({required this.repository});
 
-  Future<void> call({
+  Future<UserProfile> getProfile() {
+    return repository.getProfile();
+  }
+
+  Future<void> updateBank({
+    required String bank,
+    required String account,
+    required String name,
+  }) {
+    return repository.updateBank(bank: bank, account: account, name: name);
+  }
+
+  Future<void> changePassword({
     required String oldPassword,
     required String newPassword,
     required String confirmPassword,

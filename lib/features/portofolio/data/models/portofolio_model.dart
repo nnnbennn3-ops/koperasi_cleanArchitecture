@@ -1,5 +1,5 @@
-import '../../domain/entities/portofolio.dart';
-import '../../domain/entities/portofolio_item.dart';
+import '../../domain/entities/portofolio_entity.dart';
+import '../../domain/entities/portofolio_item_entity.dart';
 
 class PortofolioItemModel extends PortofolioItemEntity {
   const PortofolioItemModel({

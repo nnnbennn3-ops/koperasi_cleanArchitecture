@@ -1,4 +1,4 @@
-import '../../domain/entities/loan_summary.dart';
+import '../../domain/entities/loan_summary_entity.dart';
 
 class LoanSummaryModel extends LoanSummary {
   const LoanSummaryModel({

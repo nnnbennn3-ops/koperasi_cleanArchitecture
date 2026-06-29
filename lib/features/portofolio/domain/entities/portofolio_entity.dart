@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'portofolio_item.dart';
+import 'portofolio_item_entity.dart';
 
 class PortofolioEntity extends Equatable {
   final double totalSaldo;

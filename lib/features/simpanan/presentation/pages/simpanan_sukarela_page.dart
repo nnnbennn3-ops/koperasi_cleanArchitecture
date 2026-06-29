@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../cubit/simpanan_cubit.dart';
 import '../cubit/simpanan_state.dart';
-import '../../domain/entities/simpanan.dart';
+import '../../domain/entities/simpanan_entity.dart';
 
 class SimpananSukarelaPage extends StatelessWidget {
   const SimpananSukarelaPage({super.key});

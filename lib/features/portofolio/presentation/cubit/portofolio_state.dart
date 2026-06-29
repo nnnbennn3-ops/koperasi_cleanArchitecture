@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../domain/entities/portofolio.dart';
+import '../../domain/entities/portofolio_entity.dart';
 
 abstract class PortofolioState extends Equatable {
   @override

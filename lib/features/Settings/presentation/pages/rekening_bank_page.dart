@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:clean_architecture/core/widgets/app_input_widgets.dart';
 import '../cubit/settings_cubit.dart';
 import '../cubit/settings_state.dart';
 
@@ -26,7 +26,6 @@ class _RekeningBankPageState extends State<RekeningBankPage> {
   late final TextEditingController _rekeningController;
   late final TextEditingController _namaController;
 
-  //Opsi bank
   final List<String> _bankOptions = [
     'BCA',
     'BRI',
@@ -66,10 +65,7 @@ class _RekeningBankPageState extends State<RekeningBankPage> {
     return Scaffold(
       backgroundColor: const Color(0xFFF4F5F7),
       appBar: AppBar(
-        title: Text(
-          'Rekening Bank',
-          style: GoogleFonts.beVietnamPro(fontWeight: FontWeight.w600),
-        ),
+        title: const Text('Rekening Bank'),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black87,
         elevation: 0,
@@ -101,19 +97,25 @@ class _RekeningBankPageState extends State<RekeningBankPage> {
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                // ----------------- Nama Bank ----------------------
-                _buildLabel('Nama Bank'),
+                // ---------- NAMA BANK (Dropdown) ----------
+                appLabel('Nama Bank'),
                 const SizedBox(height: 6),
                 DropdownButtonFormField<String>(
                   value:
                       _bankOptions.contains(_bankController.text)
                           ? _bankController.text
                           : _bankOptions.first,
-                  decoration: _inputDecoration(),
+                  decoration: appInputDecoration(),
                   items:
                       _bankOptions
                           .map(
-                            (b) => DropdownMenuItem(value: b, child: Text(b)),
+                            (b) => DropdownMenuItem(
+                              value: b,
+                              child: Text(
+                                b,
+                                style: GoogleFonts.beVietnamPro(fontSize: 14),
+                              ),
+                            ),
                           )
                           .toList(),
                   onChanged: (val) {
@@ -127,63 +129,36 @@ class _RekeningBankPageState extends State<RekeningBankPage> {
 
                 const SizedBox(height: 16),
 
-                // ----------------- Nomor Rekening -----------------------
-                _buildLabel('Nomor Rekening'),
+                // ---------- Nomor Rekening ----------
+                appLabel('Nomor Rekening'),
                 const SizedBox(height: 6),
-                TextField(
+                appTextField(
                   controller: _rekeningController,
+                  hint: 'Masukkan nomor rekening',
+                  icon: Icons.credit_card,
                   keyboardType: TextInputType.number,
-                  style: GoogleFonts.beVietnamPro(fontSize: 14),
-                  decoration: _inputDecoration(),
                 ),
 
                 const SizedBox(height: 16),
 
-                // -------------------- Nama Lengkap -----------------------
-                _buildLabel('Nama Lengkap'),
+                // ---------- Nama Lengkap -----------
+                appLabel('Nama Lengkap'),
                 const SizedBox(height: 6),
-                TextField(
+                appTextField(
                   controller: _namaController,
-                  style: GoogleFonts.beVietnamPro(fontSize: 14),
-                  decoration: _inputDecoration(),
+                  hint: 'Masukkan nama lengkap',
+                  icon: Icons.person_outline,
                 ),
 
                 const Spacer(),
 
-                // -------------------- Tombol Simpanan ---------------------
+                // ---------- Tombol Simpan ----------
                 BlocBuilder<SettingsCubit, SettingsState>(
                   builder: (context, state) {
-                    final isLoading = state is SettingsUpdateLoading;
-                    return SizedBox(
-                      width: double.infinity,
-                      height: 52,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF0B1E8A),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(28),
-                          ),
-                        ),
-                        onPressed: isLoading ? null : _onSave,
-                        child:
-                            isLoading
-                                ? const SizedBox(
-                                  width: 22,
-                                  height: 22,
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                                : Text(
-                                  'Simpan',
-                                  style: GoogleFonts.beVietnamPro(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                      ),
+                    return appPrimaryButton(
+                      label: 'Simpan',
+                      onPressed: _onSave,
+                      isLoading: state is SettingsUpdateLoading,
                     );
                   },
                 ),
@@ -191,39 +166,6 @@ class _RekeningBankPageState extends State<RekeningBankPage> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildLabel(String text) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Text(
-        text,
-        style: GoogleFonts.beVietnamPro(
-          fontSize: 13,
-          color: Colors.grey.shade700,
-        ),
-      ),
-    );
-  }
-
-  InputDecoration _inputDecoration() {
-    return InputDecoration(
-      filled: true,
-      fillColor: Colors.white,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
-        borderSide: BorderSide(color: Colors.grey.shade300),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
-        borderSide: BorderSide(color: Colors.grey.shade300),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
-        borderSide: const BorderSide(color: Color(0xFF0B1E8A), width: 1.5),
       ),
     );
   }

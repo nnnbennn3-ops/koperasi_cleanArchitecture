@@ -1,4 +1,4 @@
-import '../../domain/entities/simpanan.dart';
+import '../../domain/entities/simpanan_entity.dart';
 import '../../domain/repositories/simpanan_repository.dart';
 import '../datasource/simpanan_local_datasource.dart';
 

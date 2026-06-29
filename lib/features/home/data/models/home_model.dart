@@ -1,5 +1,5 @@
-import '../../domain/entities/home.dart';
-import '../../domain/entities/transaction.dart';
+import '../../domain/entities/home_entity.dart';
+import '../../domain/entities/transaction_entity.dart';
 import 'transaction_model.dart';
 
 class HomeModel extends HomeEntity {

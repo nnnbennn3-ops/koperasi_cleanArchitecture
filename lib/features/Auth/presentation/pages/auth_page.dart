@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../main_navigation.dart';
+import 'package:clean_architecture/core/widgets/app_input_widgets.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
+import 'package:clean_architecture/features/Auth/data/models/register_model.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -250,9 +252,9 @@ class _LoginTabState extends State<_LoginTab> {
           const SizedBox(height: 24),
 
           // ---- IDENTIFIER ----
-          _buildLabel('Nomor Anggota atau Email'),
+          appLabel('Nomor Anggota atau Email'),
           const SizedBox(height: 6),
-          _buildTextField(
+          appTextField(
             controller: _identifierController,
             hint: 'Example@gmail.com',
             icon: Icons.person_outline,
@@ -260,23 +262,14 @@ class _LoginTabState extends State<_LoginTab> {
           const SizedBox(height: 16),
 
           // ---- PASSWORD ----
-          _buildLabel('Password'),
+          appLabel('Password'),
           const SizedBox(height: 6),
-          TextField(
+          appPasswordField(
+            label: '',
             controller: _passwordController,
-            obscureText: _obscurePassword,
-            decoration: _inputDecoration(
-              hint: '••••••••',
-              icon: Icons.lock_outline,
-              suffix: IconButton(
-                icon: Icon(
-                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                  color: Colors.grey,
-                ),
-                onPressed:
-                    () => setState(() => _obscurePassword = !_obscurePassword),
-              ),
-            ),
+            obscure: _obscurePassword,
+            onToggle:
+                () => setState(() => _obscurePassword = !_obscurePassword),
           ),
           const SizedBox(height: 8),
 
@@ -318,39 +311,10 @@ class _LoginTabState extends State<_LoginTab> {
           BlocBuilder<AuthCubit, AuthState>(
             builder: (context, state) {
               final isLoading = state is AuthLoading;
-              return SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF0B1E8A),
-                    disabledBackgroundColor: const Color(
-                      0xFF0B1E8A,
-                    ).withOpacity(0.6),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
-                  onPressed: isLoading ? null : _onLogin,
-                  child:
-                      isLoading
-                          ? const SizedBox(
-                            width: 22,
-                            height: 22,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
-                          : Text(
-                            'Login',
-                            style: GoogleFonts.beVietnamPro(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                ),
+              return appPrimaryButton(
+                label: 'Login',
+                onPressed: _onLogin,
+                isLoading: isLoading,
               );
             },
           ),
@@ -391,11 +355,13 @@ class _RegisterTabState extends State<_RegisterTab> {
 
   void _onRegister() {
     context.read<AuthCubit>().register(
-      memberNo: _memberController.text.trim(),
-      email: _emailController.text.trim(),
-      phone: _phoneController.text.trim(),
-      password: _passwordController.text,
-      confirmPassword: _confirmController.text,
+      RegisterModel(
+        memberNo: _memberController.text.trim(),
+        email: _emailController.text.trim(),
+        phone: _phoneController.text.trim(),
+        password: _passwordController.text,
+        confirmPassword: _confirmController.text,
+      ),
     );
   }
 
@@ -416,18 +382,18 @@ class _RegisterTabState extends State<_RegisterTab> {
           const SizedBox(height: 20),
 
           // ---- FIELDS ----
-          _buildLabel('Nomor Anggota'),
+          appLabel('Nomor Anggota'),
           const SizedBox(height: 6),
-          _buildTextField(
+          appTextField(
             controller: _memberController,
             hint: 'Masukkan nomor anggota',
             icon: Icons.person_outline,
           ),
           const SizedBox(height: 16),
 
-          _buildLabel('Email'),
+          appLabel('Email'),
           const SizedBox(height: 6),
-          _buildTextField(
+          appTextField(
             controller: _emailController,
             hint: 'Input Email',
             icon: Icons.mail_outline,
@@ -435,9 +401,9 @@ class _RegisterTabState extends State<_RegisterTab> {
           ),
           const SizedBox(height: 16),
 
-          _buildLabel('Nomor Ponsel'),
+          appLabel('Nomor Ponsel'),
           const SizedBox(height: 6),
-          _buildTextField(
+          appTextField(
             controller: _phoneController,
             hint: '+62 xxxxxxxxxx',
             icon: Icons.phone_outlined,
@@ -445,43 +411,20 @@ class _RegisterTabState extends State<_RegisterTab> {
           ),
           const SizedBox(height: 16),
 
-          _buildLabel('Password'),
-          const SizedBox(height: 6),
-          TextField(
+          appPasswordField(
+            label: 'Password',
             controller: _passwordController,
-            obscureText: _obscurePassword,
-            decoration: _inputDecoration(
-              hint: 'Input Password',
-              icon: Icons.lock_outline,
-              suffix: IconButton(
-                icon: Icon(
-                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                  color: Colors.grey,
-                ),
-                onPressed:
-                    () => setState(() => _obscurePassword = !_obscurePassword),
-              ),
-            ),
+            obscure: _obscurePassword,
+            onToggle:
+                () => setState(() => _obscurePassword = !_obscurePassword),
           ),
           const SizedBox(height: 16),
 
-          _buildLabel('Confirm Password'),
-          const SizedBox(height: 6),
-          TextField(
+          appPasswordField(
+            label: 'Confirm Password',
             controller: _confirmController,
-            obscureText: _obscureConfirm,
-            decoration: _inputDecoration(
-              hint: 'Input Password',
-              icon: Icons.lock_outline,
-              suffix: IconButton(
-                icon: Icon(
-                  _obscureConfirm ? Icons.visibility_off : Icons.visibility,
-                  color: Colors.grey,
-                ),
-                onPressed:
-                    () => setState(() => _obscureConfirm = !_obscureConfirm),
-              ),
-            ),
+            obscure: _obscureConfirm,
+            onToggle: () => setState(() => _obscureConfirm = !_obscureConfirm),
           ),
           const SizedBox(height: 28),
 
@@ -489,39 +432,10 @@ class _RegisterTabState extends State<_RegisterTab> {
           BlocBuilder<AuthCubit, AuthState>(
             builder: (context, state) {
               final isLoading = state is AuthLoading;
-              return SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF0B1E8A),
-                    disabledBackgroundColor: const Color(
-                      0xFF0B1E8A,
-                    ).withOpacity(0.6),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
-                  onPressed: isLoading ? null : _onRegister,
-                  child:
-                      isLoading
-                          ? const SizedBox(
-                            width: 22,
-                            height: 22,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
-                          : Text(
-                            'Register',
-                            style: GoogleFonts.beVietnamPro(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                ),
+              return appPrimaryButton(
+                label: 'Register',
+                onPressed: _onRegister,
+                isLoading: isLoading,
               );
             },
           ),
@@ -529,55 +443,4 @@ class _RegisterTabState extends State<_RegisterTab> {
       ),
     );
   }
-}
-
-// ============================================================
-// SHARED WIDGETS
-// ============================================================
-Widget _buildLabel(String text) {
-  return Text(
-    text,
-    style: GoogleFonts.beVietnamPro(fontSize: 13, fontWeight: FontWeight.w500),
-  );
-}
-
-Widget _buildTextField({
-  required TextEditingController controller,
-  required String hint,
-  required IconData icon,
-  TextInputType keyboardType = TextInputType.text,
-}) {
-  return TextField(
-    controller: controller,
-    keyboardType: keyboardType,
-    decoration: _inputDecoration(hint: hint, icon: icon),
-  );
-}
-
-InputDecoration _inputDecoration({
-  required String hint,
-  required IconData icon,
-  Widget? suffix,
-}) {
-  return InputDecoration(
-    hintText: hint,
-    hintStyle: GoogleFonts.beVietnamPro(color: Colors.grey.shade400),
-    prefixIcon: Icon(icon, color: Colors.grey.shade500),
-    suffixIcon: suffix,
-    filled: true,
-    fillColor: Colors.white,
-    contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12),
-      borderSide: BorderSide(color: Colors.grey.shade300),
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12),
-      borderSide: BorderSide(color: Colors.grey.shade300),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: Color(0xFF0B1E8A), width: 1.5),
-    ),
-  );
 }
